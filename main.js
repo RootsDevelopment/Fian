@@ -14,7 +14,6 @@ const pieces = [
 ];
 
 for (let row = 7; row >= 0; row--) {
-
     for (let col = 0; col < 8; col++) {
       
       let square = document.createElement("div");
@@ -44,55 +43,60 @@ for (let row = 7; row >= 0; row--) {
     }
 }
 
-let prevSelectedSquare = null;
-let pieceSelected = null;
-let selectedRow = null;
-let selectedCol = null;
-let selectedPiece = null;
+let selectedSquare = null;
 
 board.addEventListener("click", (e) => {
 
-  let selectedSquare = e.target.closest(".square");
-  const img = selectedSquare.querySelector("img");
+  let square = e.target.closest(".square");
+  const img = square.querySelector("img");
 
-  if (!selectedSquare) return;
+  if (!square) return;
 
-  if(!prevSelectedSquare){
+  if(!selectedSquare){
     if (!img) return;
-
-    selectSquare(selectedSquare,img);
+    selectSquare(square,img);
     return;
   }
   
-  if(prevSelectedSquare === selectedSquare){
+  if(selectedSquare === square){
     clearSelection();
     return;
   }
 
+  attenptMove(selectedSquare,square);
   clearSelection();
 
   if(img){
-      selectSquare(selectedSquare,img);
+      selectSquare(square,img);
   }
+
 })
 
+function attenptMove(fromSquare,toSquare){
+  const piece = fromSquare.querySelector("img");
+  toSquare.appendChild(piece);
+
+  piece.dataset.row = toSquare.dataset.row;
+  piece.dataset.col = toSquare.dataset.col;
+}
+
 function selectSquare(square,img){
-  selectedRow = img.dataset.row;
-  selectedCol = img.dataset.col;
-  selectedPiece = img.dataset.piece;
+  let selectedRow = img.dataset.row;
+  let selectedCol = img.dataset.col;
+  let selectedPiece = img.dataset.piece;
 
   const points = new Points;
-  const moves = points.availableMoves(+selectedRow,+selectedCol, img.dataset.piece[1],  img.dataset.piece[0]);
+  const moves = points.availableMoves(+selectedRow,+selectedCol, selectedPiece[1],  selectedPiece[0]);
   AddHighlights(moves);
 
-  prevSelectedSquare = square;
+  selectedSquare = square;
   square.classList.add("selected");
 }
 
 function clearSelection(){
-  prevSelectedSquare.classList.remove("selected");
+  selectedSquare.classList.remove("selected");
   RemoveHighlight();
-  prevSelectedSquare = null;
+  selectedSquare = null;
 }
 
 function RemoveHighlight(){

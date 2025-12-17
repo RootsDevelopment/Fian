@@ -52,7 +52,6 @@ export default class Points{
             this.points.push([new_x,new_y]);
         }
 
-
         new_x = x+2;
         new_y = y-1;
 
