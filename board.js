@@ -89,7 +89,15 @@ export default class Board {
         );
 
         if( exists ) {
+
             const piece = fromSquare.querySelector("img");
+
+            piece.classList.add("animate");
+            piece.addEventListener("animationend", () => {
+                piece.classList.remove("animate");
+              }, { once: true });
+
+
             toSquare.appendChild(piece);
       
             piece.dataset.row = toSquare.dataset.row;
