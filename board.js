@@ -18,6 +18,8 @@ export default class Board {
         this.addEventListeners();
     }
 
+    moves = [];
+
     render() {
         this.container.innerHTML = "";
 
@@ -81,11 +83,18 @@ export default class Board {
     }
 
     attenptMove(fromSquare,toSquare){
-        const piece = fromSquare.querySelector("img");
-        toSquare.appendChild(piece);
+
+        const exists = this.moves.some(
+            arr => JSON.stringify(arr) === JSON.stringify([+toSquare.dataset.row,+toSquare.dataset.col])
+        );
+
+        if( exists ) {
+            const piece = fromSquare.querySelector("img");
+            toSquare.appendChild(piece);
       
-        piece.dataset.row = toSquare.dataset.row;
-        piece.dataset.col = toSquare.dataset.col;
+            piece.dataset.row = toSquare.dataset.row;
+            piece.dataset.col = toSquare.dataset.col;
+        }
     }
       
     selectSquare(square,img){
@@ -94,8 +103,8 @@ export default class Board {
         let selectedPiece = img.dataset.piece;
       
         const points = new Points;
-        const moves = points.availableMoves(+selectedRow,+selectedCol, selectedPiece[1],  selectedPiece[0]);
-        this.AddHighlights(moves);
+        this.moves = points.availableMoves(+selectedRow,+selectedCol, selectedPiece[1],  selectedPiece[0]);
+        this.addHighlights(this.moves);
       
         this.selectedSquare = square;
         square.classList.add("selected");
@@ -113,10 +122,12 @@ export default class Board {
           square.classList.remove("highlight")
         })
     }
-    AddHighlights (moves){
+
+    addHighlights (moves){
         moves.forEach (move => {
           const square = document.querySelector(`.square[data-row="${move[0]}"][data-col="${move[1]}"]`);
           square.classList.add("highlight");
         }) 
     }
+
 }
