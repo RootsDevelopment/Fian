@@ -77,7 +77,7 @@ export default class Points{
     rookMoves(x,y){
 
         for(let row = 0; row < 8 ; row++){
-            if(this.validBounds(x,row) )  this.points.push([x,row]);
+            if(this.validBounds(x,row))  this.points.push([x,row]);
             if(this.validBounds(row,y))  this.points.push([row,y]);
         }
     }
