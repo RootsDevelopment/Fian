@@ -1,4 +1,4 @@
-export default class Points{
+export default class Points { 
     x;
     y;
     points = [];
@@ -177,11 +177,5 @@ export default class Points{
         return this.points
     }
 
-    Print(){
-        console.log("points : " + this.points);
-    }
+    valid
 }
-
-// let moves = new Points;
-// moves.availableMoves(0,1,"b");
-// moves.Print()

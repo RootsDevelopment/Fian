@@ -16,10 +16,11 @@ export default class Board {
         this.selectedSquare = null;
         this.render();
         this.addEventListeners();
+        this.turn = 'w';
     }
 
     moves = [];
-
+2
     render() {
         this.container.innerHTML = "";
 
@@ -83,7 +84,6 @@ export default class Board {
     }
 
     attenptMove(fromSquare,toSquare){
-
         const exists = this.moves.some(
             arr => JSON.stringify(arr) === JSON.stringify([+toSquare.dataset.row,+toSquare.dataset.col])
         );
