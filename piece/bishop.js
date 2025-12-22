@@ -1,30 +1,34 @@
-import Piece from "./piece"
+import Piece from "./piece";
 
-export default class Bishop extends Piece{
-    getMoves(board,x,y){
-        const moves = [];
-        const directions = [[1,1],[1,-1],[-1,1],[-1,-1]];
+export default class Bishop extends Piece {
+  getMoves(board, x, y) {
+    const moves = [];
+    const directions = [
+      [1, 1],
+      [1, -1],
+      [-1, 1],
+      [-1, -1],
+    ];
 
-        for(const[dx,dy] of directions) {
+    for (const [dx, dy] of directions) {
+      let new_x = x + dx;
+      let new_y = y + dy;
 
-            let new_x = x + dx;
-            let new_y = y + dy;
+      while (board.inBounds(new_x, new_y)) {
+        const target = board.getPiece(new_x, new_y);
 
-            while(board.inBounds(new_x,new_y)){
-                const target = board.getPiece(new_x,new_y);
-               
-                if(!target){
-                    moves.push([new_x,new_y])
-                }else{
-                    if(target.color !== this.color){
-                        moves.push([new_x,new_y])
-                    }
-                    break
-                }
-                new_x += dx;
-                new_y += dy;
-            }
+        if (!target) {
+          moves.push([new_x, new_y]);
+        } else {
+          if (target.color !== this.color) {
+            moves.push([new_x, new_y]);
+          }
+          break;
         }
-        return moves;
+        new_x += dx;
+        new_y += dy;
+      }
     }
+    return moves;
+  }
 }
