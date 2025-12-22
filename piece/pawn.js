@@ -1,8 +1,7 @@
-import Piece from "./piece";
+import Piece from "./piece.js";
 
 export default class Pawn extends Piece {
   getMoves(board, x, y) {
-    const moves = [];
-    return moves;
+    return this.moves;
   }
 }
