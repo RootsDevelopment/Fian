@@ -31,18 +31,3 @@ export default function renderBoard(boardInstance) {
 export function addEventListeners(handleClick) {
   boardElement.addEventListener("click", handleClick);
 }
-
-let selectedSquare = null;
-
-function selectSquare(square, img) {
-  let selectedRow = img.dataset.row;
-  let selectedCol = img.dataset.col;
-  let selectedPiece = img.dataset.piece;
-
-  selectedSquare = square;
-  square.classList.add("selected");
-}
-function clearSelection() {
-  selectedSquare.classList.remove("selected");
-  selectedSquare = null;
-}

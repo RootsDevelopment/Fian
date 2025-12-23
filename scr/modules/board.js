@@ -86,6 +86,21 @@ export default class Board {
     this.board[toRow][toCol] = piece;
     this.board[fromRow][fromCol] = null;
   }
+
+  getAttackedSquares(color) {
+    const attackedSquares = [];
+
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = this.getPiece(r, c);
+        if (piece && piece.color === color) {
+          const pieceAttacks = piece.getMoves(this, r, c);
+          attackedSquares.push(...pieceAttacks);
+        }
+      }
+    }
+    return attackedSquares;
+  }
 }
 
 let boardInstance = new Board([

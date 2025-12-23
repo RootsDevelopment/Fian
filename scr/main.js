@@ -13,12 +13,15 @@ board.setBoard();
 renderBoard(board);
 addEventListeners(handleClick);
 
+updateControlLayers(board);
+
 let selectedSquare = null;
 function handleClick(e) {
   const square = e.target.closest(".square");
-  const img = square.querySelector("img");
 
   if (!square) return;
+
+  const img = square.querySelector("img");
 
   if (!selectedSquare) {
     if (!img) return;
@@ -81,5 +84,30 @@ function attemptMove(fromSquare, toSquare, board) {
   if (isValid) {
     board.movePiece(from, to);
     renderBoard(board);
+
+    updateControlLayers(board);
   }
+}
+
+function updateControlLayers(board) {
+  document.querySelectorAll(".square").forEach((sq) => {
+    sq.classList.remove("white-control", "black-control");
+  });
+
+  const whiteAttacks = board.getAttackedSquares("white");
+  const blackAttacks = board.getAttackedSquares("black");
+
+  whiteAttacks.forEach(([r, c]) => {
+    const el = document.querySelector(
+      `.square[data-row="${r}"][data-col="${c}"]`
+    );
+    if (el) el.classList.add("white-control");
+  });
+
+  blackAttacks.forEach(([r, c]) => {
+    const el = document.querySelector(
+      `.square[data-row="${r}"][data-col="${c}"]`
+    );
+    if (el) el.classList.add("black-control");
+  });
 }
