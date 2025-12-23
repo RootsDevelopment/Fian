@@ -1,23 +1,24 @@
- body{
+ /* body{
     height: 100hv;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(0, 0, 0);
-} 
+    background-color: rgb(0, 0, 0); */
+/* }  */
 
 #board {
     width: 720px;
     height: 720px;
     border: 1px solid rgb(0, 0, 0) ;
     border-radius: 1%;
-    padding: 30px;
+    margin: 30px auto;
     text-align: center;
     background-color: rgb(247, 210, 146);
     display:grid;
     grid-template-columns: repeat(8,1fr);
     grid-template-rows: repeat(8,1fr);
+    gap: 0;
 }
 
 .square {

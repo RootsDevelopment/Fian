@@ -21,22 +21,21 @@ export default class Board {
   setBoard() {
     const rows = this.piecePlacement.split("/");
 
-    for (let row = 0; row <= 7; row++) {
+    for (let row = 0; row < 8; row++) {
       let currRow = rows[row];
-      let currCol = "";
+      // console.log("Processing row:", currRow);
+
       let boardRow = [];
 
-      for (let col = 0; col < currRow.length; col++) {
-        currCol += currRow[col];
-
-        if (!isNaN(currCol)) {
-          for (let i = parseInt(currCol) - 1; i >= 0; i--) {
+      for (let char of currRow) {
+        if (!isNaN(char)) {
+          let emptySquares = parseInt(char);
+          for (let i = 0; i < emptySquares; i++) {
             boardRow.push(null);
           }
         } else {
-          boardRow.push(this.createPieceFromFen(currCol));
+          boardRow.push(this.createPieceFromFen(char));
         }
-        currCol = "";
       }
       this.board.push(boardRow);
     }
@@ -46,20 +45,21 @@ export default class Board {
     if (char === "") return null;
 
     const color = char === char.toUpperCase() ? "white" : "black";
+    const name = char.toLowerCase();
 
     switch (char.toLowerCase()) {
       case "r":
-        return new Rook(color);
+        return new Rook(color, name);
       case "n":
-        return new Knight(color);
+        return new Knight(color, name);
       case "b":
-        return new Bishop(color);
+        return new Bishop(color, name);
       case "q":
-        return new Queen(color);
+        return new Queen(color, name);
       case "k":
-        return new King(color);
+        return new King(color, name);
       case "p":
-        return new Pawn(color);
+        return new Pawn(color, name);
       default:
         return null;
     }
@@ -88,16 +88,18 @@ export default class Board {
   }
 }
 
-let boardInsatnce = new Board([
-  "rnbqkbnr/8/8/8/8/8/8/RNBQKBNR",
+let boardInstance = new Board([
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
   "w",
   "KQkq",
   "-",
   "0",
   "1",
 ]);
-boardInsatnce.setBoard();
+boardInstance.setBoard();
 
-const piece = boardInsatnce.getPiece(0, 3);
-const moves = piece.getMoves(boardInsatnce, 0, 3);
-console.log("moves : " + moves);
+// const piece = boardInstance.getPiece(1, 3);
+// const moves = piece.getMoves(boardInstance, 0, 3);
+// console.log("name : " + piece.color[0] + piece.name);
+
+console.log(boardInstance.board);

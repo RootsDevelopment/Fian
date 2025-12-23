@@ -1,6 +1,7 @@
 export default class Piece {
-  constructor(color) {
+  constructor(color, name) {
     this.color = color;
+    this.name = name;
     this.moves = [];
   }
 
