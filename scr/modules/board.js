@@ -73,7 +73,7 @@ export default class Board {
     return x >= 0 && x < 8 && y >= 0 && y < 8;
   }
 
-  updateBoard(fromCoordinate, toCoordinate) {
+  movePiece(fromCoordinate, toCoordinate) {
     const [fromRow, fromCol] = fromCoordinate;
     const [toRow, toCol] = toCoordinate;
 
@@ -102,4 +102,4 @@ boardInstance.setBoard();
 // const moves = piece.getMoves(boardInstance, 0, 3);
 // console.log("name : " + piece.color[0] + piece.name);
 
-console.log(boardInstance.board);
+// console.log(boardInstance.board);

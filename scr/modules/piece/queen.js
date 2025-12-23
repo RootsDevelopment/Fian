@@ -4,6 +4,7 @@ import Rook from "./rook.js";
 
 export default class Queen extends Piece {
   getMoves(board, x, y) {
+    const moves = [];
     const directions = [
       [1, 0],
       [-1, 0],
@@ -23,10 +24,10 @@ export default class Queen extends Piece {
         const target = board.getPiece(new_x, new_y);
 
         if (!target) {
-          this.moves.push([new_x, new_y]);
+          moves.push([new_x, new_y]);
         } else {
           if (target.color !== this.color) {
-            this.moves.push([new_x, new_y]);
+            moves.push([new_x, new_y]);
           }
           break;
         }
@@ -35,6 +36,6 @@ export default class Queen extends Piece {
       }
     }
 
-    return this.moves;
+    return moves;
   }
 }
