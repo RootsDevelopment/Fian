@@ -32,6 +32,59 @@ export default class King extends Piece {
         new_y += dy;
       }
     }
+
+    if (this.color === "white") {
+      const castlingRights = board.getCastlingAbility();
+      const row = 7;
+      if (y === 4 && x === row) {
+        console.log(board.getPiece(row, 7));
+        if (
+          castlingRights.whiteShort &&
+          board.getPiece(row, 5) === null &&
+          board.getPiece(row, 6) === null &&
+          board.getPiece(row, 7).name === "r" &&
+          board.getPiece(row, 7).color === this.color
+        ) {
+          moves.push([row, 6]);
+        }
+
+        if (
+          castlingRights.whiteLong &&
+          board.getPiece(row, 3) === null &&
+          board.getPiece(row, 2) === null &&
+          board.getPiece(row, 1) === null &&
+          board.getPiece(row, 0).name === "r" &&
+          board.getPiece(row, 0).color === this.color
+        ) {
+          moves.push([row, 2]);
+        }
+      }
+      if (this.color === "black") {
+        const castlingRights = board.getCastlingAbility();
+        const row = 0;
+        if (y === 4 && x === row) {
+          if (
+            castlingRights.blackShort &&
+            board.getPiece(row, 5) === null &&
+            board.getPiece(row, 6) === null &&
+            board.getPiece(row, 7).name === "r" &&
+            board.getPiece(row, 7).color === this.color
+          ) {
+            moves.push([row, 6]);
+          }
+          if (
+            castlingRights.blackLong &&
+            board.getPiece(row, 3) === null &&
+            board.getPiece(row, 2) === null &&
+            board.getPiece(row, 1) === null &&
+            board.getPiece(row, 0).name === "r" &&
+            board.getPiece(row, 0).color === this.color
+          ) {
+            moves.push([row, 2]);
+          }
+        }
+      }
+    }
     return moves;
   }
 }

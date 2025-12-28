@@ -101,20 +101,47 @@ export default class Board {
     }
     return attackedSquares;
   }
+
+  getActiveColor() {
+    return this.activeColor;
+  }
+
+  switchActiveColor() {
+    this.activeColor = this.activeColor === "w" ? "b" : "w";
+  }
+
+  getCastlingAbility() {
+    const castlingRights = {
+      whiteShort: this.castlingAbility.includes("K"),
+      whiteLong: this.castlingAbility.includes("Q"),
+      blackShort: this.castlingAbility.includes("k"),
+      blackLong: this.castlingAbility.includes("q"),
+    };
+
+    return castlingRights;
+  }
+  setCastlingAbility(newAbility) {
+    this.castlingAbility = newAbility;
+  }
+
+  isSquareAttacked(x, y, color) {
+    const attackedSquares = this.getAttackedSquares(color);
+    return attackedSquares.some((square) => square[0] === x && square[1] === y);
+  }
 }
 
-let boardInstance = new Board([
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
-  "w",
-  "KQkq",
-  "-",
-  "0",
-  "1",
-]);
-boardInstance.setBoard();
+// let boardInstance = new Board([
+//   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+//   "w",
+//   "KQkq",
+//   "-",
+//   "0",
+//   "1",
+// ]);
+// boardInstance.setBoard();
 
 // const piece = boardInstance.getPiece(1, 3);
 // const moves = piece.getMoves(boardInstance, 0, 3);
 // console.log("name : " + piece.color[0] + piece.name);
 
-// console.log(boardInstance.board);
+// console.log(boardInstance.castlingAbility);
