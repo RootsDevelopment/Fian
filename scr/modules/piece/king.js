@@ -14,6 +14,8 @@ export default class King extends Piece {
       [-1, -1],
     ];
 
+    const currentColor = this.color;
+
     for (const [dx, dy] of directions) {
       let new_x = x + dx;
       let new_y = y + dy;
@@ -21,10 +23,10 @@ export default class King extends Piece {
       if (board.inBounds(new_x, new_y)) {
         const target = board.getPiece(new_x, new_y);
 
-        if (!target) {
+        if (!target && !board.isSquareAttacked(new_x, new_y, currentColor)) {
           moves.push([new_x, new_y]);
         } else {
-          if (target.color !== this.color) {
+          if (target && target.color !== currentColor) {
             moves.push([new_x, new_y]);
           }
         }
@@ -37,13 +39,15 @@ export default class King extends Piece {
       const castlingRights = board.getCastlingAbility();
       const row = 7;
       if (y === 4 && x === row) {
-        console.log(board.getPiece(row, 7));
         if (
           castlingRights.whiteShort &&
           board.getPiece(row, 5) === null &&
           board.getPiece(row, 6) === null &&
           board.getPiece(row, 7).name === "r" &&
-          board.getPiece(row, 7).color === this.color
+          board.getPiece(row, 7).color === this.color &&
+          !board.isSquareAttacked(row, 4, "white") &&
+          !board.isSquareAttacked(row, 5, "white") &&
+          !board.isSquareAttacked(row, 6, "white")
         ) {
           moves.push([row, 6]);
         }
@@ -54,7 +58,10 @@ export default class King extends Piece {
           board.getPiece(row, 2) === null &&
           board.getPiece(row, 1) === null &&
           board.getPiece(row, 0).name === "r" &&
-          board.getPiece(row, 0).color === this.color
+          board.getPiece(row, 0).color === this.color &&
+          !board.isSquareAttacked(row, 4, "white") &&
+          !board.isSquareAttacked(row, 3, "white") &&
+          !board.isSquareAttacked(row, 2, "white")
         ) {
           moves.push([row, 2]);
         }
@@ -68,7 +75,10 @@ export default class King extends Piece {
             board.getPiece(row, 5) === null &&
             board.getPiece(row, 6) === null &&
             board.getPiece(row, 7).name === "r" &&
-            board.getPiece(row, 7).color === this.color
+            board.getPiece(row, 7).color === this.color &&
+            !board.isSquareAttacked(row, 4, "black") &&
+            !board.isSquareAttacked(row, 5, "black") &&
+            !board.isSquareAttacked(row, 6, "black")
           ) {
             moves.push([row, 6]);
           }
@@ -78,7 +88,10 @@ export default class King extends Piece {
             board.getPiece(row, 2) === null &&
             board.getPiece(row, 1) === null &&
             board.getPiece(row, 0).name === "r" &&
-            board.getPiece(row, 0).color === this.color
+            board.getPiece(row, 0).color === this.color &&
+            !board.isSquareAttacked(row, 4, "black") &&
+            !board.isSquareAttacked(row, 3, "black") &&
+            !board.isSquareAttacked(row, 2, "black")
           ) {
             moves.push([row, 2]);
           }
