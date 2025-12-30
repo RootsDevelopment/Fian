@@ -163,6 +163,7 @@ export default class Board {
 
     return castlingRights;
   }
+  
   setCastlingAbility(newAbility) {
     this.castlingAbility = newAbility;
   }
