@@ -28,6 +28,12 @@ export default function renderBoard(boardInstance) {
   }
 }
 
+export function selectPiece(){
+
+  pieces = ["Queen","Rook","Bishop","Knight"];
+  
+}
+
 export function addEventListeners(handleClick) {
   boardElement.addEventListener("click", handleClick);
 }

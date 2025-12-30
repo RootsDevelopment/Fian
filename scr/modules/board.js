@@ -79,7 +79,7 @@ export default class Board {
     const piece = this.getPiece(fromRow, fromCol);
 
     if (piece === "") {
-      return;
+      return 0;
     }
 
     if (piece.name === "k") {
@@ -103,6 +103,7 @@ export default class Board {
           this.board[fromRow][3] = rook;
           this.board[fromRow][0] = null;
         }
+        return 0;
       }
     }
 
@@ -124,20 +125,37 @@ export default class Board {
       }
     }
 
+    if (piece.name === 'p'){
+
+      if(piece.color === "white" && fromRow === 1){
+
+        this.board[toRow][toCol] = piece;
+        this.board[fromRow][fromCol] = null;
+        return 1;
+      }if( piece.color === "black" && fromRow === 1){
+
+        this.board[toRow][toCol] = piece;
+        this.board[fromRow][fromCol] = null;
+        return 1;
+      }
+    }
+
     this.board[toRow][toCol] = piece;
     this.board[fromRow][fromCol] = null;
+
+    return 0;
   }
 
   getAttackedSquares(color) {
     const attackedSquares = [];
 
-    console.log("Calculating attacked squares for color:", color);
+    // console.log("Calculating attacked squares for color:", color);
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
         const piece = this.getPiece(r, c);
         if (piece && piece.color === color) {
           const pieceAttacks = piece.getMoves(this, r, c);
-          console.log("Piece at", r, c, "attacks:", pieceAttacks);
+          // console.log("Piece at", r, c, "attacks:", pieceAttacks);
           attackedSquares.push(...pieceAttacks);
         }
       }
@@ -225,6 +243,10 @@ export default class Board {
     }
 
     return false;
+  }
+
+  promotePiece (fromCoordinate,toCoordinate){
+
   }
 }
 

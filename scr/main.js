@@ -37,6 +37,7 @@ function handleClick(e) {
   attemptMove(selectedSquare, square, board);
   clearSelection();
 }
+
 function selectSquare(square) {
   const row = parseInt(square.dataset.row);
   const col = parseInt(square.dataset.col);
@@ -82,7 +83,12 @@ function attemptMove(fromSquare, toSquare, board) {
   const isValid = moves.some((m) => m[0] === to[0] && m[1] === to[1]);
 
   if (isValid) {
-    board.movePiece(from, to);
+    const moved = board.movePiece(from, to);
+    if( moved ) {
+      selectPiece();
+    } 
+
+    
     renderBoard(board);
 
     updateControlLayers(board);
@@ -110,4 +116,12 @@ function updateControlLayers(board) {
     );
     if (el) el.classList.add("black-control");
   });
+}
+
+function selectPiece(){
+
+  pieces = ["Queen","Rook","Bishop","Knight"]
+
+  
+
 }
