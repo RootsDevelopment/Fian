@@ -9,6 +9,7 @@ const board = new Board([
   "0",
   "1",
 ]);
+
 board.setBoard();
 renderBoard(board);
 addEventListeners(handleClick);
@@ -84,11 +85,10 @@ function attemptMove(fromSquare, toSquare, board) {
 
   if (isValid) {
     const moved = board.movePiece(from, to);
-    if( moved ) {
-      selectPiece();
-    } 
+    if (moved) {
+      board.promotePiece(from, to, board.getPiece(to[0], to[1]).color);
+    }
 
-    
     renderBoard(board);
 
     updateControlLayers(board);
@@ -118,10 +118,19 @@ function updateControlLayers(board) {
   });
 }
 
-function selectPiece(){
+function selectPiece() {
+  const pieces = ["Queen", "Rook", "Bishop", "Knight"];
 
-  pieces = ["Queen","Rook","Bishop","Knight"]
+  const selectList = document.createElement("select");
+  selectList.id = "selectPiece";
 
-  
+  pieces.forEach((piece) => {
+    const option = document.createElement("option");
+    option.value = piece.toLowerCase();
+    option.text = piece;
+    selectList.appendChild(option);
+  });
 
+  document.body.appendChild(selectList);
+  console.log("Piece selection UI added.");
 }

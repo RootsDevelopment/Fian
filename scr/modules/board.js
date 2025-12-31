@@ -125,15 +125,13 @@ export default class Board {
       }
     }
 
-    if (piece.name === 'p'){
-
-      if(piece.color === "white" && fromRow === 1){
-
+    if (piece.name === "p") {
+      if (piece.color === "white" && fromRow === 1) {
         this.board[toRow][toCol] = piece;
         this.board[fromRow][fromCol] = null;
         return 1;
-      }if( piece.color === "black" && fromRow === 1){
-
+      }
+      if (piece.color === "black" && fromRow === 6) {
         this.board[toRow][toCol] = piece;
         this.board[fromRow][fromCol] = null;
         return 1;
@@ -181,7 +179,7 @@ export default class Board {
 
     return castlingRights;
   }
-  
+
   setCastlingAbility(newAbility) {
     this.castlingAbility = newAbility;
   }
@@ -245,8 +243,12 @@ export default class Board {
     return false;
   }
 
-  promotePiece (fromCoordinate,toCoordinate){
+  promotePiece(fromCoordinate, toCoordinate, color) {
+    const [fromRow, fromCol] = fromCoordinate;
+    const [toRow, toCol] = toCoordinate;
 
+    this.board[toRow][toCol] = new Queen(color, "q");
+    this.board[fromRow][fromCol] = null;
   }
 }
 
