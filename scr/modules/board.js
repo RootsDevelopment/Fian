@@ -103,6 +103,9 @@ export default class Board {
           this.board[fromRow][3] = rook;
           this.board[fromRow][0] = null;
         }
+
+        this.board[toRow][toCol] = piece;
+        this.board[fromRow][fromCol] = null;
         return 0;
       }
     }
@@ -243,7 +246,7 @@ export default class Board {
     return false;
   }
 
-  promotePiece(fromCoordinate, toCoordinate, color) {
+  promotePiece(fromCoordinate, toCoordinate, color, pieceType) {
     const [fromRow, fromCol] = fromCoordinate;
     const [toRow, toCol] = toCoordinate;
 

@@ -1,5 +1,5 @@
 import Board from "./modules/board.js";
-import renderBoard, { addEventListeners } from "./ui/render.js";
+import renderBoard, { addEventListeners, selectPiece } from "./ui/render.js";
 
 const board = new Board([
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
@@ -86,7 +86,8 @@ function attemptMove(fromSquare, toSquare, board) {
   if (isValid) {
     const moved = board.movePiece(from, to);
     if (moved) {
-      board.promotePiece(from, to, board.getPiece(to[0], to[1]).color);
+      selectPiece(board.getPiece(to[0], to[1]).color[0]);
+      // board.promotePiece(from, to, board.getPiece(to[0], to[1]).color);
     }
 
     renderBoard(board);
@@ -118,19 +119,19 @@ function updateControlLayers(board) {
   });
 }
 
-function selectPiece() {
-  const pieces = ["Queen", "Rook", "Bishop", "Knight"];
+// function selectPiece() {
+//   const pieces = ["Queen", "Rook", "Bishop", "Knight"];
 
-  const selectList = document.createElement("select");
-  selectList.id = "selectPiece";
+//   const selectList = document.createElement("select");
+//   selectList.id = "selectPiece";
 
-  pieces.forEach((piece) => {
-    const option = document.createElement("option");
-    option.value = piece.toLowerCase();
-    option.text = piece;
-    selectList.appendChild(option);
-  });
+//   pieces.forEach((piece) => {
+//     const option = document.createElement("option");
+//     option.value = piece.toLowerCase();
+//     option.text = piece;
+//     selectList.appendChild(option);
+//   });
 
-  document.body.appendChild(selectList);
-  console.log("Piece selection UI added.");
-}
+//   document.body.appendChild(selectList);
+//   console.log("Piece selection UI added.");
+// }

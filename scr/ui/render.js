@@ -3,8 +3,6 @@ const boardElement = document.getElementById("board");
 export default function renderBoard(boardInstance) {
   boardElement.innerHTML = "";
 
-  // selectPiece();
-
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       const square = document.createElement("div");
@@ -34,19 +32,46 @@ export function addEventListeners(handleClick) {
   boardElement.addEventListener("click", handleClick);
 }
 
-export function selectPiece() {
-  const pieces = ["Queen", "Rook", "Bishop", "Knight"];
+export function selectPiece(color) {
+  const overlay = document.createElement("div");
+  overlay.classList.add("overlay");
 
-  const selectList = document.createElement("select");
-  selectList.id = "selectPiece";
+  const dialog = document.createElement("div");
+  dialog.classList.add("dialog");
+
+  const title = document.createElement("h3");
+  title.textContent = "Select promotion piece:";
+  dialog.appendChild(title);
+
+  const pieces = ["q", "r", "b", "n"];
+
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("promotion-buttons");
 
   pieces.forEach((piece) => {
-    const option = document.createElement("option");
-    option.value = piece.toLowerCase();
-    option.text = piece;
-    selectList.appendChild(option);
+    const button = document.createElement("button");
+    const img = document.createElement("img");
+    img.src = `images/${color}${piece}.png`;
+    img.classList.add("piece");
+    button.appendChild(img);
+    button.dataset.piece = piece;
+
+    button.onmousedown = () => {
+      button.classList.add("onmousedown");
+    };
+    button.onmouseout = () => {
+      button.classList.add("onmouseout");
+    };
+
+    button.onclick = () => {
+      document.body.removeChild(overlay);
+      console.log("Piece selected:", piece);
+    };
+
+    buttonsContainer.appendChild(button);
   });
 
-  document.body.appendChild(selectList);
-  console.log("Piece selection UI added.");
+  dialog.appendChild(buttonsContainer);
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
 }
