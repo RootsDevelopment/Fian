@@ -1,7 +1,8 @@
 import Piece from "./piece.js";
 
 export default class Pawn extends Piece {
-  getMoves(board, x, y) {
+  getMoves(game, x, y) {
+    const board = game.board;
     const moves = [];
     const direction = this.color === "white" ? -1 : 1;
     const startRank = this.color === "white" ? 6 : 1;

@@ -1,7 +1,8 @@
 import Piece from "./piece.js";
 
 export default class Knight extends Piece {
-  getMoves(board, x, y) {
+  getMoves(game, x, y) {
+    const board = game.board;
     const moves = [];
     const directions = [
       [2, 1],

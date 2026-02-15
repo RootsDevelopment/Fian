@@ -3,7 +3,8 @@ import Piece from "./piece.js";
 import Rook from "./rook.js";
 
 export default class Queen extends Piece {
-  getMoves(board, x, y) {
+  getMoves(game, x, y) {
+    const board = game.board;
     const moves = [];
     const directions = [
       [1, 0],

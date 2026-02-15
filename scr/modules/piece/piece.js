@@ -4,7 +4,11 @@ export default class Piece {
     this.name = name;
   }
 
-  getMoves(board, x, y) {
+  getMoves(game, x, y) {
     return [];
+  }
+
+  clone() {
+    return new this.constructor(this.color, this.name);
   }
 }

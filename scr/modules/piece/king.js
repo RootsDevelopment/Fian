@@ -1,7 +1,8 @@
 import Piece from "./piece.js";
 
 export default class King extends Piece {
-  getMoves(board, x, y) {
+  getMoves(game, x, y) {
+    const board = game.board;
     const moves = [];
     const directions = [
       [1, 0],
@@ -36,7 +37,7 @@ export default class King extends Piece {
     }
 
     if (this.color === "white") {
-      const castlingRights = board.getCastlingAbility();
+      const castlingRights = game.getCastlingAbility();
       const row = 7;
       if (y === 4 && x === row) {
         if (
