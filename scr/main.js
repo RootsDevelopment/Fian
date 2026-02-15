@@ -17,7 +17,8 @@ addEventListeners(handleClick);
 updateControlLayers(board);
 
 let selectedSquare = null;
-function handleClick(e) {
+
+async function handleClick(e) {
   const square = e.target.closest(".square");
 
   if (!square) return;
@@ -35,7 +36,7 @@ function handleClick(e) {
     return;
   }
 
-  attemptMove(selectedSquare, square, board);
+  await attemptMove(selectedSquare, square, board);
   clearSelection();
 }
 
@@ -55,7 +56,7 @@ function selectSquare(square) {
 function addHighlights(moves) {
   moves.forEach((move) => {
     const square = document.querySelector(
-      `.square[data-row="${move[0]}"][data-col="${move[1]}"]`
+      `.square[data-row="${move[0]}"][data-col="${move[1]}"]`,
     );
     square.classList.add("highlight");
   });
@@ -74,7 +75,7 @@ function removeHighlight() {
   });
 }
 
-function attemptMove(fromSquare, toSquare, board) {
+async function attemptMove(fromSquare, toSquare, board) {
   const from = [+fromSquare.dataset.row, +fromSquare.dataset.col];
   const to = [+toSquare.dataset.row, +toSquare.dataset.col];
 
@@ -86,8 +87,10 @@ function attemptMove(fromSquare, toSquare, board) {
   if (isValid) {
     const moved = board.movePiece(from, to);
     if (moved) {
-      selectPiece(board.getPiece(to[0], to[1]).color[0]);
-      // board.promotePiece(from, to, board.getPiece(to[0], to[1]).color);
+      const color = board.getPiece(to[0], to[1]).color[0];
+      const pieceType = await selectPiece(color);
+
+      board.promotePiece(from, to, color, pieceType);
     }
 
     renderBoard(board);
@@ -106,14 +109,14 @@ function updateControlLayers(board) {
 
   whiteAttacks.forEach(([r, c]) => {
     const el = document.querySelector(
-      `.square[data-row="${r}"][data-col="${c}"]`
+      `.square[data-row="${r}"][data-col="${c}"]`,
     );
     if (el) el.classList.add("white-control");
   });
 
   blackAttacks.forEach(([r, c]) => {
     const el = document.querySelector(
-      `.square[data-row="${r}"][data-col="${c}"]`
+      `.square[data-row="${r}"][data-col="${c}"]`,
     );
     if (el) el.classList.add("black-control");
   });

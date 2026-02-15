@@ -250,7 +250,18 @@ export default class Board {
     const [fromRow, fromCol] = fromCoordinate;
     const [toRow, toCol] = toCoordinate;
 
-    this.board[toRow][toCol] = new Queen(color, "q");
+    console.log("Promoting piece at", toRow, toCol, "to", pieceType);
+
+    if (pieceType === "q") {
+      this.board[toRow][toCol] = new Queen(color, "q");
+    } else if (pieceType === "r") {
+      this.board[toRow][toCol] = new Rook(color, "r");
+    } else if (pieceType === "b") {
+      this.board[toRow][toCol] = new Bishop(color, "b");
+    } else if (pieceType === "n") {
+      this.board[toRow][toCol] = new Knight(color, "n");
+    }
+
     this.board[fromRow][fromCol] = null;
   }
 }
