@@ -28,12 +28,52 @@ export default function renderBoard(boardInstance) {
   }
 }
 
-export function selectPiece(){
-
-  pieces = ["Queen","Rook","Bishop","Knight"];
-  
-}
-
 export function addEventListeners(handleClick) {
   boardElement.addEventListener("click", handleClick);
+}
+
+export function selectPiece(color) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.classList.add("overlay");
+
+    const dialog = document.createElement("div");
+    dialog.classList.add("dialog");
+
+    const title = document.createElement("h3");
+    title.textContent = "Select promotion piece:";
+    dialog.appendChild(title);
+
+    const pieces = ["q", "r", "b", "n"];
+
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("promotion-buttons");
+
+    pieces.forEach((piece) => {
+      const button = document.createElement("button");
+      const img = document.createElement("img");
+      img.src = `images/${color}${piece}.png`;
+      img.classList.add("piece");
+      button.appendChild(img);
+      button.dataset.piece = piece;
+
+      button.onmousedown = () => {
+        button.classList.add("onmousedown");
+      };
+      button.onmouseout = () => {
+        button.classList.add("onmouseout");
+      };
+
+      button.onclick = () => {
+        document.body.removeChild(overlay);
+        resolve(piece);
+      };
+
+      buttonsContainer.appendChild(button);
+    });
+
+    dialog.appendChild(buttonsContainer);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+  });
 }

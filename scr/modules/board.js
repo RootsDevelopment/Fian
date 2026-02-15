@@ -103,6 +103,9 @@ export default class Board {
           this.board[fromRow][3] = rook;
           this.board[fromRow][0] = null;
         }
+
+        this.board[toRow][toCol] = piece;
+        this.board[fromRow][fromCol] = null;
         return 0;
       }
     }
@@ -125,15 +128,13 @@ export default class Board {
       }
     }
 
-    if (piece.name === 'p'){
-
-      if(piece.color === "white" && fromRow === 1){
-
+    if (piece.name === "p") {
+      if (piece.color === "white" && fromRow === 1) {
         this.board[toRow][toCol] = piece;
         this.board[fromRow][fromCol] = null;
         return 1;
-      }if( piece.color === "black" && fromRow === 1){
-
+      }
+      if (piece.color === "black" && fromRow === 6) {
         this.board[toRow][toCol] = piece;
         this.board[fromRow][fromCol] = null;
         return 1;
@@ -149,13 +150,11 @@ export default class Board {
   getAttackedSquares(color) {
     const attackedSquares = [];
 
-    // console.log("Calculating attacked squares for color:", color);
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
         const piece = this.getPiece(r, c);
         if (piece && piece.color === color) {
           const pieceAttacks = piece.getMoves(this, r, c);
-          // console.log("Piece at", r, c, "attacks:", pieceAttacks);
           attackedSquares.push(...pieceAttacks);
         }
       }
@@ -181,7 +180,7 @@ export default class Board {
 
     return castlingRights;
   }
-  
+
   setCastlingAbility(newAbility) {
     this.castlingAbility = newAbility;
   }
@@ -245,8 +244,23 @@ export default class Board {
     return false;
   }
 
-  promotePiece (fromCoordinate,toCoordinate){
+  promotePiece(fromCoordinate, toCoordinate, color, pieceType) {
+    const [fromRow, fromCol] = fromCoordinate;
+    const [toRow, toCol] = toCoordinate;
 
+    console.log("Promoting piece at", toRow, toCol, "to", pieceType);
+
+    if (pieceType === "q") {
+      this.board[toRow][toCol] = new Queen(color, "q");
+    } else if (pieceType === "r") {
+      this.board[toRow][toCol] = new Rook(color, "r");
+    } else if (pieceType === "b") {
+      this.board[toRow][toCol] = new Bishop(color, "b");
+    } else if (pieceType === "n") {
+      this.board[toRow][toCol] = new Knight(color, "n");
+    }
+
+    this.board[fromRow][fromCol] = null;
   }
 }
 
