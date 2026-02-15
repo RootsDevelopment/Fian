@@ -50,8 +50,6 @@ function selectSquare(square) {
 
   const moves = game.getLegalMoves(row, col);
 
-  console.log("Legal moves for", selectedPiece, "at", [row, col], ":", moves);
-
   possibleMoves(moves);
 
   selectedSquare = square;
