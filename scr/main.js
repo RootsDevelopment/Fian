@@ -1,7 +1,7 @@
-import Board from "./modules/board.js";
+import Game from "./modules/game.js";
 import renderBoard, { addEventListeners, selectPiece } from "./ui/render.js";
 
-const board = new Board([
+const game = new Game([
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
   "w",
   "KQkq",
@@ -10,11 +10,10 @@ const board = new Board([
   "1",
 ]);
 
-board.setBoard();
-renderBoard(board);
+renderBoard(game.board);
 addEventListeners(handleClick);
 
-updateControlLayers(board);
+// updateControlLayers(game.board);
 
 let selectedSquare = null;
 
@@ -36,24 +35,28 @@ async function handleClick(e) {
     return;
   }
 
-  await attemptMove(selectedSquare, square, board);
+  await attemptMove(selectedSquare, square);
   clearSelection();
 }
 
 function selectSquare(square) {
   const row = parseInt(square.dataset.row);
   const col = parseInt(square.dataset.col);
-  const selectedPiece = board.getPiece(row, col);
 
-  const moves = selectedPiece.getMoves(board, row, col);
+  const selectedPiece = game.board.getPiece(row, col);
 
-  addHighlights(moves);
+  if (!selectedPiece) return;
+  if (selectedPiece.color !== game.turn) return;
+
+  const moves = game.getLegalMoves(row, col);
+
+  possibleMoves(moves);
 
   selectedSquare = square;
   square.classList.add("selected");
 }
 
-function addHighlights(moves) {
+function possibleMoves(moves) {
   moves.forEach((move) => {
     const square = document.querySelector(
       `.square[data-row="${move[0]}"][data-col="${move[1]}"]`,
@@ -75,28 +78,13 @@ function removeHighlight() {
   });
 }
 
-async function attemptMove(fromSquare, toSquare, board) {
+async function attemptMove(fromSquare, toSquare) {
   const from = [+fromSquare.dataset.row, +fromSquare.dataset.col];
   const to = [+toSquare.dataset.row, +toSquare.dataset.col];
 
-  const moves = board
-    .getPiece(from[0], from[1])
-    .getMoves(board, from[0], from[1]);
-  const isValid = moves.some((m) => m[0] === to[0] && m[1] === to[1]);
+  const moved = await game.makeMove(from, to);
 
-  if (isValid) {
-    const moved = board.movePiece(from, to);
-    if (moved) {
-      const color = board.getPiece(to[0], to[1]).color;
-      const pieceType = await selectPiece(color[0]);
-
-      board.promotePiece(from, to, color, pieceType);
-    }
-
-    renderBoard(board);
-
-    updateControlLayers(board);
-  }
+  if (moved) renderBoard(game.board);
 }
 
 function updateControlLayers(board) {

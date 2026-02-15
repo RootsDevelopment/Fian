@@ -6,20 +6,14 @@ import Queen from "./piece/queen.js";
 import Rook from "./piece/rook.js";
 
 export default class Board {
-  constructor(initState) {
-    this.state = initState;
-    this.piecePlacement = initState[0];
-    this.activeColor = initState[1];
-    this.castlingAbility = initState[2];
-    this.enpassent = initState[3];
-    this.fiftyRule = initState[4];
-    this.numberOfMoves = initState[5];
+  constructor(fen) {
+    this.board = [];
+    this.loadFromFEN(fen);
   }
 
-  board = [];
-
-  setBoard() {
-    const rows = this.piecePlacement.split("/");
+  loadFromFEN(fen) {
+    this.board = [];
+    const rows = fen.split("/");
 
     for (let row = 0; row < 8; row++) {
       let currRow = rows[row];
@@ -28,8 +22,7 @@ export default class Board {
 
       for (let char of currRow) {
         if (!isNaN(char)) {
-          let emptySquares = parseInt(char);
-          for (let i = 0; i < emptySquares; i++) {
+          for (let i = 0; i < parseInt(char); i++) {
             boardRow.push(null);
           }
         } else {
@@ -65,7 +58,7 @@ export default class Board {
   }
 
   getPiece(x, y) {
-    return this.board[x][y];
+    return this.board[x][y] || null;
   }
 
   inBounds(x, y) {
@@ -78,146 +71,65 @@ export default class Board {
 
     const piece = this.getPiece(fromRow, fromCol);
 
-    if (piece === "") {
-      return 0;
-    }
-
-    if (piece.name === "k") {
-      if (piece.color === "white") {
-        this.castlingAbility = this.castlingAbility
-          .replace("K", "")
-          .replace("Q", "");
-      } else {
-        this.castlingAbility = this.castlingAbility
-          .replace("k", "")
-          .replace("q", "");
-      }
-
-      if (Math.abs(toCol - fromCol) === 2) {
-        if (toCol === 6) {
-          const rook = this.getPiece(fromRow, 7);
-          this.board[fromRow][5] = rook;
-          this.board[fromRow][7] = null;
-        } else if (toCol === 2) {
-          const rook = this.getPiece(fromRow, 0);
-          this.board[fromRow][3] = rook;
-          this.board[fromRow][0] = null;
-        }
-
-        this.board[toRow][toCol] = piece;
-        this.board[fromRow][fromCol] = null;
-        return 0;
-      }
-    }
-
-    if (piece.name === "r") {
-      if (piece.color === "white") {
-        if (fromRow === 7 && fromCol === 0) {
-          this.castlingAbility = this.castlingAbility.replace("Q", "");
-        }
-        if (fromRow === 7 && fromCol === 7) {
-          this.castlingAbility = this.castlingAbility.replace("K", "");
-        }
-      } else {
-        if (fromRow === 0 && fromCol === 0) {
-          this.castlingAbility = this.castlingAbility.replace("q", "");
-        }
-        if (fromRow === 0 && fromCol === 7) {
-          this.castlingAbility = this.castlingAbility.replace("k", "");
-        }
-      }
-    }
-
-    if (piece.name === "p") {
-      if (piece.color === "white" && fromRow === 1) {
-        this.board[toRow][toCol] = piece;
-        this.board[fromRow][fromCol] = null;
-        return 1;
-      }
-      if (piece.color === "black" && fromRow === 6) {
-        this.board[toRow][toCol] = piece;
-        this.board[fromRow][fromCol] = null;
-        return 1;
-      }
-    }
+    if (!piece) return false;
 
     this.board[toRow][toCol] = piece;
     this.board[fromRow][fromCol] = null;
-
-    return 0;
+    return true;
   }
 
-  getAttackedSquares(color) {
-    const attackedSquares = [];
-
-    for (let r = 0; r < 8; r++) {
-      for (let c = 0; c < 8; c++) {
-        const piece = this.getPiece(r, c);
-        if (piece && piece.color === color) {
-          const pieceAttacks = piece.getMoves(this, r, c);
-          attackedSquares.push(...pieceAttacks);
-        }
-      }
-    }
-    return attackedSquares;
-  }
-
-  getActiveColor() {
-    return this.activeColor;
-  }
-
-  switchActiveColor() {
-    this.activeColor = this.activeColor === "w" ? "b" : "w";
-  }
-
-  getCastlingAbility() {
-    const castlingRights = {
-      whiteShort: this.castlingAbility.includes("K"),
-      whiteLong: this.castlingAbility.includes("Q"),
-      blackShort: this.castlingAbility.includes("k"),
-      blackLong: this.castlingAbility.includes("q"),
-    };
-
-    return castlingRights;
-  }
-
-  setCastlingAbility(newAbility) {
-    this.castlingAbility = newAbility;
+  replacePiece(row, col, newPiece) {
+    this.board[row][col] = newPiece;
   }
 
   isSquareAttacked(x, y, color) {
-    const directions = [
+    const opponent = color === "white" ? "black" : "white";
+
+    const rookDirs = [
       [1, 0],
       [-1, 0],
       [0, 1],
       [0, -1],
+    ];
+
+    const bishopDirs = [
       [1, 1],
       [1, -1],
       [-1, 1],
       [-1, -1],
     ];
-    for (const [dx, dy] of directions) {
-      let new_x = x + dx;
-      let new_y = y + dy;
 
-      while (this.inBounds(new_x, new_y)) {
-        const target = this.getPiece(new_x, new_y);
+    for (const [dx, dy] of [...rookDirs, ...bishopDirs]) {
+      let nx = x + dx;
+      let ny = y + dy;
+
+      while (this.inBounds(nx, ny)) {
+        const target = this.getPiece(nx, ny);
 
         if (target) {
-          if (target.color !== color) {
-            const targetMoves = target.getMoves(this, new_x, new_y);
-            for (const move of targetMoves) {
-              if (move[0] === x && move[1] === y) {
-                return true;
-              }
-            }
+          if (target.color === opponent) {
+            if (
+              (dx === 0 || dy === 0) &&
+              (target.name === "r" || target.name === "q")
+            )
+              return true;
+
+            if (
+              dx !== 0 &&
+              dy !== 0 &&
+              (target.name === "b" || target.name === "q")
+            )
+              return true;
           }
+          break;
         }
-        new_x += dx;
-        new_y += dy;
+
+        nx += dx;
+        ny += dy;
       }
     }
 
+    // Knight attacks
     const knightMoves = [
       [2, 1],
       [2, -1],
@@ -230,49 +142,69 @@ export default class Board {
     ];
 
     for (const [dx, dy] of knightMoves) {
-      const knight_x = x + dx;
-      const knight_y = y + dy;
+      const nx = x + dx;
+      const ny = y + dy;
+      if (!this.inBounds(nx, ny)) continue;
+      const target = this.getPiece(nx, ny);
+      if (target && target.color === opponent && target.name === "n")
+        return true;
+    }
 
-      if (this.inBounds(knight_x, knight_y)) {
-        const target = this.getPiece(knight_x, knight_y);
-        if (target && target.color !== color && target.name === "n") {
-          return true;
-        }
-      }
+    const pawnDir = opponent === "white" ? -1 : 1;
+    for (const dy of [-1, 1]) {
+      const nx = x + pawnDir;
+      const ny = y + dy;
+      if (!this.inBounds(nx, ny)) continue;
+      const target = this.getPiece(nx, ny);
+      if (target && target.color === opponent && target.name === "p")
+        return true;
+    }
+
+    const kingMoves = [
+      [1, 0],
+      [0, 1],
+      [-1, 0],
+      [0, -1],
+      [1, 1],
+      [1, -1],
+      [-1, 1],
+      [-1, -1],
+    ];
+
+    for (const [dx, dy] of kingMoves) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (!this.inBounds(nx, ny)) continue;
+      const target = this.getPiece(nx, ny);
+      if (target && target.color === opponent && target.name === "k")
+        return true;
     }
 
     return false;
   }
 
-  promotePiece(fromCoordinate, toCoordinate, color, pieceType) {
-    const [fromRow, fromCol] = fromCoordinate;
-    const [toRow, toCol] = toCoordinate;
-
-    console.log("Promoting piece at", toRow, toCol, "to", pieceType);
-
-    if (pieceType === "q") {
-      this.board[toRow][toCol] = new Queen(color, "q");
-    } else if (pieceType === "r") {
-      this.board[toRow][toCol] = new Rook(color, "r");
-    } else if (pieceType === "b") {
-      this.board[toRow][toCol] = new Bishop(color, "b");
-    } else if (pieceType === "n") {
-      this.board[toRow][toCol] = new Knight(color, "n");
+  isKingInCheck(color) {
+    let kingPos = null;
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = this.getPiece(r, c);
+        if (piece && piece.color === color && piece.name === "k") {
+          kingPos = [r, c];
+          break;
+        }
+      }
     }
+    if (!kingPos) return false;
+    return this.isSquareAttacked(kingPos[0], kingPos[1], color);
+  }
 
-    this.board[fromRow][fromCol] = null;
+  clone() {
+    const newBoard = new Board("8/8/8/8/8/8/8/8");
+
+    newBoard.board = this.board.map((row) =>
+      row.map((piece) => (piece ? piece.clone() : null)),
+    );
+
+    return newBoard;
   }
 }
-
-// let boardInstance = new Board([
-//   "rnbqkbnr/8/8/8/8/8/8/RNBQKBNR",
-//   "w",
-//   "KQkq",
-//   "-",
-//   "0",
-//   "1",
-// ]);
-// boardInstance.setBoard();
-
-// const piece = boardInstance.getPiece(0, 0);
-// console.log(boardInstance.isSquareAttacked(0, 0, "black"));
