@@ -87,8 +87,8 @@ async function attemptMove(fromSquare, toSquare, board) {
   if (isValid) {
     const moved = board.movePiece(from, to);
     if (moved) {
-      const color = board.getPiece(to[0], to[1]).color[0];
-      const pieceType = await selectPiece(color);
+      const color = board.getPiece(to[0], to[1]).color;
+      const pieceType = await selectPiece(color[0]);
 
       board.promotePiece(from, to, color, pieceType);
     }
@@ -121,20 +121,3 @@ function updateControlLayers(board) {
     if (el) el.classList.add("black-control");
   });
 }
-
-// function selectPiece() {
-//   const pieces = ["Queen", "Rook", "Bishop", "Knight"];
-
-//   const selectList = document.createElement("select");
-//   selectList.id = "selectPiece";
-
-//   pieces.forEach((piece) => {
-//     const option = document.createElement("option");
-//     option.value = piece.toLowerCase();
-//     option.text = piece;
-//     selectList.appendChild(option);
-//   });
-
-//   document.body.appendChild(selectList);
-//   console.log("Piece selection UI added.");
-// }

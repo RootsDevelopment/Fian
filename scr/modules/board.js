@@ -150,13 +150,11 @@ export default class Board {
   getAttackedSquares(color) {
     const attackedSquares = [];
 
-    // console.log("Calculating attacked squares for color:", color);
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
         const piece = this.getPiece(r, c);
         if (piece && piece.color === color) {
           const pieceAttacks = piece.getMoves(this, r, c);
-          // console.log("Piece at", r, c, "attacks:", pieceAttacks);
           attackedSquares.push(...pieceAttacks);
         }
       }
