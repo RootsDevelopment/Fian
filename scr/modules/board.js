@@ -82,6 +82,10 @@ export default class Board {
     this.board[row][col] = newPiece;
   }
 
+  removePiece(row, col) {
+    this.board[row][col] = null;
+  }
+
   isSquareAttacked(x, y, color) {
     const opponent = color === "white" ? "black" : "white";
 

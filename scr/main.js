@@ -19,7 +19,6 @@ let selectedSquare = null;
 
 async function handleClick(e) {
   const square = e.target.closest(".square");
-
   if (!square) return;
 
   const img = square.querySelector("img");
@@ -35,8 +34,17 @@ async function handleClick(e) {
     return;
   }
 
-  await attemptMove(selectedSquare, square);
+  const moved = await attemptMove(selectedSquare, square);
   clearSelection();
+
+  if (!moved) return;
+
+  if (game.turn === "black" && game.status === "active") {
+    console.log("AI is thinking...");
+    await new Promise((r) => setTimeout(r, 200));
+    await game.makeRandomMove();
+    renderBoard(game.board);
+  }
 }
 
 function selectSquare(square) {
@@ -85,6 +93,8 @@ async function attemptMove(fromSquare, toSquare) {
   const moved = await game.makeMove(from, to);
 
   if (moved) renderBoard(game.board);
+
+  return moved;
 }
 
 function updateControlLayers(board) {
