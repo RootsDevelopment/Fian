@@ -1,14 +1,26 @@
 import Game from "./modules/game.js";
 import renderBoard, { addEventListeners, selectPiece } from "./ui/render.js";
+import { HighlightRenderer } from "./ui/highlightRenderer.js";
+import { ConceptEngine } from "./modules/concepts/conceptEngine.js";
+import { pawnStructure } from "./modules/concepts/pawnStructure.js";
+import { HighlightManager } from "./ui/highlightManager.js";
+import { registerShortcuts } from "./utils/shorcutManager.js";
 
 const game = new Game([
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+  "r1bqk2r/pppn1ppp/p2p1n2/3Bb3/4P3/P2P2N2/PP1P1PPP/RNBQK2R",
   "w",
   "KQkq",
   "-",
   "0",
   "1",
 ]);
+
+const engine = new ConceptEngine(game);
+engine.register("pawnStructure", pawnStructure);
+
+const renderer = new HighlightRenderer();
+const highlightManager = new HighlightManager(renderer);
+registerShortcuts(engine, highlightManager);
 
 renderBoard(game.board);
 addEventListeners(handleClick);

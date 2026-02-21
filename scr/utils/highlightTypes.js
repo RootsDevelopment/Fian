@@ -1,0 +1,44 @@
+export const HighlightType = {
+  SQUARE: "square",
+  ARROW: "arrow",
+  AREA: "area",
+  PIECE: "piece",
+};
+
+export function createSquareHighlight({
+  concept,
+  squares,
+  color = "rgba(255, 255, 0, 0.4)",
+  label = "",
+  priority = 1,
+}) {
+  return {
+    id: crypto.randomUUID(),
+    concept,
+    type: HighlightType.SQUARE,
+    squares,
+    color,
+    label,
+    priority,
+  };
+}
+
+export function createArrowHighlight({
+  concept,
+  from,
+  to,
+  color = "rgba(0, 0, 255, 0.6)",
+  label = "",
+  priority = 1,
+}) {
+  return {
+    id: crypto.randomUUID(),
+    concept,
+    type: HighlightType.ARROW,
+    from,
+    to,
+    color,
+    label,
+    priority,
+  };
+}
