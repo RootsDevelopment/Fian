@@ -1,3 +1,5 @@
+import { normalizeHighlights } from "../../ui/highlightNormalizer.js";
+
 export class ConceptEngine {
   constructor(game) {
     this.game = game;
@@ -12,6 +14,7 @@ export class ConceptEngine {
     const module = this.registry.get(name);
     if (!module) return [];
 
-    return module.analyze(this.game);
+    const rawHighlights = module.analyze(this.game);
+    return normalizeHighlights(rawHighlights);
   }
 }

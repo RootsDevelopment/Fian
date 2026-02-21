@@ -5,25 +5,44 @@ import { ConceptEngine } from "./modules/concepts/conceptEngine.js";
 import { pawnStructure } from "./modules/concepts/pawnStructure.js";
 import { HighlightManager } from "./ui/highlightManager.js";
 import { registerShortcuts } from "./utils/shorcutManager.js";
+import { ArrowRenderer } from "./ui/arrowRenderer.js";
 
-const game = new Game([
-  "r1bqk2r/pppn1ppp/p2p1n2/3Bb3/4P3/P2P2N2/PP1P1PPP/RNBQK2R",
-  "w",
-  "KQkq",
-  "-",
-  "0",
-  "1",
-]);
+const isolatedPawns = "8/8/8/8/8/3P4/8/8";
+const doubledPawns = "8/3p4/8/8/3P4/3P4/8/8";
+const passedPawn = "8/8/8/3P4/8/8/8/8";
+const backwardPawn = "8/8/8/3P4/2P5/8/8/8";
+const pawnChain = "8/1ppp4/8/3P4/2P5/1P6/8/8";
+
+const game = new Game([pawnChain, "w", "KQkq", "-", "0", "1"]);
+
+renderBoard(game.board);
+
+const boardElement = document.getElementById("board");
 
 const engine = new ConceptEngine(game);
 engine.register("pawnStructure", pawnStructure);
 
-const renderer = new HighlightRenderer();
-const highlightManager = new HighlightManager(renderer);
+const arrowRendererInstance = new ArrowRenderer(boardElement);
+
+const renderer = new HighlightRenderer(arrowRendererInstance);
+
+const highlightManager = new HighlightManager(renderer, engine);
+
 registerShortcuts(engine, highlightManager);
 
-renderBoard(game.board);
 addEventListeners(handleClick);
+
+// arrowRendererInstance.render([
+//   {
+//     id: "test-arrow-1",
+//     type: "arrow",
+//     from: "c2",
+//     to: "d4",
+//     color: "rgba(23, 109, 135, 0.8)",
+//     thickness: 4,
+//     priority: 10,
+//   },
+// ]);
 
 // updateControlLayers(game.board);
 

@@ -1,8 +1,26 @@
 import { HighlightType } from "../utils/highlightTypes.js";
+import { ArrowRenderer } from "./arrowRenderer.js";
 
 export class HighlightRenderer {
+  constructor(arrowRenderer) {
+    this.arrowRenderer = arrowRenderer;
+  }
+
   clear() {
     document.querySelectorAll(".highlight-layer").forEach((el) => el.remove());
+
+    const arrowLayer = document.getElementById("arrow-layer");
+
+    if (arrowLayer) {
+      // Keep defs (arrowhead definition)
+      const children = Array.from(arrowLayer.children);
+
+      children.forEach((child) => {
+        if (child.tagName !== "defs") {
+          child.remove();
+        }
+      });
+    }
   }
 
   render(highlights) {
@@ -11,6 +29,9 @@ export class HighlightRenderer {
     highlights.forEach((h) => {
       if (h.type === HighlightType.SQUARE) {
         this.renderSquareHighlight(h);
+      }
+      if (h.type === HighlightType.ARROW) {
+        this.arrowRenderer.render([h]);
       }
     });
   }
