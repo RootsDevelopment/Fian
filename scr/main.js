@@ -2,33 +2,46 @@ import Game from "./modules/game.js";
 import renderBoard, { addEventListeners, selectPiece } from "./ui/render.js";
 import { HighlightRenderer } from "./ui/highlightRenderer.js";
 import { ConceptEngine } from "./modules/concepts/conceptEngine.js";
-import { pawnStructure } from "./modules/concepts/pawnStructure.js";
+import { pawnStructure } from "./modules/concepts/pawnStructure/index.js";
 import { HighlightManager } from "./ui/highlightManager.js";
-import { registerShortcuts } from "./utils/shorcutManager.js";
 import { ArrowRenderer } from "./ui/arrowRenderer.js";
+import { ShortcutManager } from "./utils/shorcutManager.js";
 
-const isolatedPawns = "8/8/8/8/8/3P4/8/8";
+const isolatedPawns = "8/2p1pp2/8/8/8/3P4/8/8";
 const doubledPawns = "8/3p4/8/8/3P4/3P4/8/8";
 const passedPawn = "8/8/8/3P4/8/8/8/8";
-const backwardPawn = "8/8/8/3P4/2P5/8/8/8";
-const pawnChain = "8/1ppp4/8/3P4/2P5/1P6/8/8";
+const backwardPawn = "8/8/8/3P4/2P5/1P6/8/8";
+const pawnChain = "8/1ppp4/8/8/3P4/2P5/1P6/8";
 
 const game = new Game([pawnChain, "w", "KQkq", "-", "0", "1"]);
-
 renderBoard(game.board);
-
-const boardElement = document.getElementById("board");
 
 const engine = new ConceptEngine(game);
 engine.register("pawnStructure", pawnStructure);
 
+const boardElement = document.getElementById("board");
+const arrowRenderer = new ArrowRenderer(boardElement);
+const highlightRenderer = new HighlightRenderer(arrowRenderer);
 const arrowRendererInstance = new ArrowRenderer(boardElement);
 
-const renderer = new HighlightRenderer(arrowRendererInstance);
+const highlightManager = new HighlightManager(highlightRenderer, engine);
 
-const highlightManager = new HighlightManager(renderer, engine);
+// Initialize shortcuts
+const shortcutManager = new ShortcutManager(highlightManager, engine);
 
-registerShortcuts(engine, highlightManager);
+// Register additional shortcuts if needed
+shortcutManager.register("ctrl+shift+p", "pawnStructure"); // Alternative
+
+// Listen for position changes (if you have moves)
+document.addEventListener("positionChanged", () => {
+  highlightManager.onPositionChange();
+});
+
+// For AI logging
+document.addEventListener("conceptAnalyzed", (event) => {
+  console.log("AI Analysis complete:", event.detail);
+  // Here you could send to your AI service
+});
 
 addEventListeners(handleClick);
 

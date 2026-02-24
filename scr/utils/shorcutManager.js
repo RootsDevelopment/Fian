@@ -1,23 +1,63 @@
-export function registerShortcuts(engine, highlightManager) {
-  const shortcutMap = {
-    p: "pawnStructure",
-    t: "tacticalThreats",
-    c: "kingSafety",
-    s: "spaceAdvantage",
-    f: "filesAndRooks",
-  };
+export class ShortcutManager {
+  constructor(highlightManager, engine) {
+    this.highlightManager = highlightManager;
+    this.engine = engine;
+    this.shortcuts = new Map();
 
-  window.addEventListener("keydown", (e) => {
-    if (!e.ctrlKey) return;
+    this._initShortcuts();
+  }
 
-    const key = e.key.toLowerCase();
-    const conceptName = shortcutMap[key];
-    if (!conceptName) return;
+  _initShortcuts() {
+    this.register("ctrl+p", "pawnStructure");
+    this.register("ctrl+t", "tacticalThreats");
+    this.register("ctrl+k", "kingSafety");
+    this.register("ctrl+s", "spaceAdvantage");
+    this.register("ctrl+f", "filesAndRooks");
 
-    e.preventDefault();
+    // Listen to key events
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+  }
 
-    const highlights = engine.run(conceptName);
-    console.log(`Toggled concept: ${conceptName}`, highlights);
-    highlightManager.toggleConcept(conceptName, highlights);
-  });
+  register(shortcut, conceptName) {
+    this.shortcuts.set(shortcut.toLowerCase(), conceptName);
+  }
+
+  handleKeyDown(event) {
+    // Build shortcut string
+    const parts = [];
+    if (event.ctrlKey) parts.push("ctrl");
+    if (event.shiftKey) parts.push("shift");
+    if (event.altKey) parts.push("alt");
+    parts.push(event.key.toLowerCase());
+
+    const shortcut = parts.join("+");
+
+    const conceptName = this.shortcuts.get(shortcut);
+    if (conceptName) {
+      event.preventDefault();
+
+      console.log(`Shortcut ${shortcut} triggered for ${conceptName}`);
+
+      // // NEW: Get AI analysis when toggling (for future use)
+      // const aiAnalysis = this.engine.getConceptAnalysis(conceptName);
+      // console.log("AI Analysis:", aiAnalysis);
+
+      // Toggle the concept
+      this.highlightManager.toggleConcept(conceptName);
+
+      // // Optional: Dispatch event for AI logging
+      // this._dispatchAnalysisEvent(conceptName, aiAnalysis);
+    }
+  }
+
+  _dispatchAnalysisEvent(conceptName, analysis) {
+    const event = new CustomEvent("conceptAnalyzed", {
+      detail: {
+        concept: conceptName,
+        analysis: analysis,
+        timestamp: Date.now(),
+      },
+    });
+    document.dispatchEvent(event);
+  }
 }

@@ -12,7 +12,6 @@ export class HighlightRenderer {
     const arrowLayer = document.getElementById("arrow-layer");
 
     if (arrowLayer) {
-      // Keep defs (arrowhead definition)
       const children = Array.from(arrowLayer.children);
 
       children.forEach((child) => {

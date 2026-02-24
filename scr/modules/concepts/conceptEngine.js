@@ -1,20 +1,43 @@
-import { normalizeHighlights } from "../../ui/highlightNormalizer.js";
-
 export class ConceptEngine {
   constructor(game) {
     this.game = game;
-    this.registry = new Map();
+    this.concepts = new Map();
+    this.cache = new Map();
+    this.cacheTimeout = 1000;
   }
 
-  register(name, module) {
-    this.registry.set(name, module);
+  register(name, concept) {
+    this.concepts.set(name, concept);
   }
 
-  run(name) {
-    const module = this.registry.get(name);
-    if (!module) return [];
+  getConceptHighlights(name) {
+    const concept = this.concepts.get(name);
+    if (!concept) return [];
 
-    const rawHighlights = module.analyze(this.game);
-    return normalizeHighlights(rawHighlights);
+    console.log(`Analyzing ${name}...`);
+    const highlights = concept.analyze(this.game);
+
+    return highlights;
+  }
+
+  getConceptAnalysis(name) {
+    const concept = this.concepts.get(name);
+    if (!concept) return null;
+
+    const highlights = concept.analyze(this.game);
+    return {
+      highlights,
+      summary: this.summarizeHighlights(highlights),
+      timestamp: Date.now(),
+    };
+  }
+
+  summarizeHighlights(highlights) {
+    const summary = {};
+    highlights.forEach((h) => {
+      const type = h.label || "unknown";
+      summary[type] = (summary[type] || 0) + 1;
+    });
+    return summary;
   }
 }

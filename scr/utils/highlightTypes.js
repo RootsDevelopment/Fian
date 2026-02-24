@@ -27,7 +27,7 @@ export function createArrowHighlight({
   concept,
   from,
   to,
-  color = "rgba(0, 0, 255, 0.6)",
+  color = "rgba(255, 0, 0, 0.6)",
   label = "",
   priority = 1,
 }) {
