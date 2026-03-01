@@ -1,9 +1,8 @@
+// engine.js
 export class ConceptEngine {
   constructor(game) {
     this.game = game;
     this.concepts = new Map();
-    this.cache = new Map();
-    this.cacheTimeout = 1000;
   }
 
   register(name, concept) {
@@ -14,30 +13,25 @@ export class ConceptEngine {
     const concept = this.concepts.get(name);
     if (!concept) return [];
 
-    console.log(`Analyzing ${name}...`);
-    const highlights = concept.analyze(this.game);
+    // Get analysis from concept
+    const analysis = concept.analyze(this.game);
 
-    return highlights;
+    // Get visualizer from concept and convert to highlights
+    const visualizer = concept.getVisualizer();
+    if (!visualizer || !visualizer.toHighlights) {
+      console.warn(`Concept ${name} has no visualizer or toHighlights method`);
+      return [];
+    }
+    if (!visualizer) return [];
+
+    return visualizer.toHighlights(analysis);
   }
 
-  getConceptAnalysis(name) {
-    const concept = this.concepts.get(name);
-    if (!concept) return null;
-
-    const highlights = concept.analyze(this.game);
-    return {
-      highlights,
-      summary: this.summarizeHighlights(highlights),
-      timestamp: Date.now(),
-    };
+  getConcept(name) {
+    return this.concepts.get(name);
   }
 
-  summarizeHighlights(highlights) {
-    const summary = {};
-    highlights.forEach((h) => {
-      const type = h.label || "unknown";
-      summary[type] = (summary[type] || 0) + 1;
-    });
-    return summary;
+  getAllConcepts() {
+    return Array.from(this.concepts.values());
   }
 }

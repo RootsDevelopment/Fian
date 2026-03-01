@@ -208,12 +208,33 @@ export class PawnStructureDetector {
       if (supports) {
         // Arrow should go FROM supporter (behind) TO supported (in front)
         findings.push({
-          type: "CHAIN",
+          type: "CHAIN_LINK",
           color,
           position: { row: pawn.row, col: pawn.col }, // Supporter (behind)
           target: { row: supports.row, col: supports.col }, // Supported (in front)
           metadata: {
             explanation: "Pawn supports pawn in front",
+          },
+        });
+      }
+    });
+    pawns.forEach((pawn) => {
+      const hasSupport = pawns.some(
+        (other) =>
+          other.row === pawn.row + direction && // Pawn behind
+          Math.abs(other.col - pawn.col) === 1,
+      );
+
+      const isBase = !hasSupport;
+
+      if (isBase) {
+        findings.push({
+          type: "CHAIN_BASE",
+          color,
+          position: { row: pawn.row, col: pawn.col },
+          metadata: {
+            explanation:
+              "This is the base of the pawn chain - the most vulnerable point",
           },
         });
       }

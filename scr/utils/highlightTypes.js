@@ -11,6 +11,8 @@ export function createSquareHighlight({
   color = "rgba(255, 255, 0, 0.4)",
   label = "",
   priority = 1,
+  metadata = {},
+  description = null,
 }) {
   return {
     id: crypto.randomUUID(),
@@ -20,6 +22,8 @@ export function createSquareHighlight({
     color,
     label,
     priority,
+    metadata,
+    description,
   };
 }
 
@@ -30,6 +34,8 @@ export function createArrowHighlight({
   color = "rgba(255, 0, 0, 0.6)",
   label = "",
   priority = 1,
+  metadata = {},
+  description = null,
 }) {
   return {
     id: crypto.randomUUID(),
@@ -40,5 +46,7 @@ export function createArrowHighlight({
     color,
     label,
     priority,
+    metadata,
+    description,
   };
 }

@@ -5,59 +5,72 @@ import { ConceptEngine } from "./modules/concepts/conceptEngine.js";
 import { pawnStructure } from "./modules/concepts/pawnStructure/index.js";
 import { HighlightManager } from "./ui/highlightManager.js";
 import { ArrowRenderer } from "./ui/arrowRenderer.js";
-import { ShortcutManager } from "./utils/shorcutManager.js";
+import { ShortcutManager } from "./utils/shortcutManager.js";
+import { TooltipManager } from "./utils/tooltipManager.js";
+import { ConceptLegend } from "./ui/conceptLegend.js";
 
 const isolatedPawns = "8/2p1pp2/8/8/8/3P4/8/8";
 const doubledPawns = "8/3p4/8/8/3P4/3P4/8/8";
 const passedPawn = "8/8/8/3P4/8/8/8/8";
 const backwardPawn = "8/8/8/3P4/2P5/1P6/8/8";
 const pawnChain = "8/1ppp4/8/8/3P4/2P5/1P6/8";
+const iqpPosition = "8/8/8/3k4/3P4/3K4/8/8 w - - 0 1";
 
-const game = new Game([pawnChain, "w", "KQkq", "-", "0", "1"]);
+const boardElement = document.getElementById("board");
+const game = new Game([isolatedPawns, "w", "KQkq", "-", "0", "1"]);
 renderBoard(game.board);
+
+const arrowRenderer = new ArrowRenderer(boardElement);
+const highlightRenderer = new HighlightRenderer(arrowRenderer);
 
 const engine = new ConceptEngine(game);
 engine.register("pawnStructure", pawnStructure);
 
-const boardElement = document.getElementById("board");
-const arrowRenderer = new ArrowRenderer(boardElement);
-const highlightRenderer = new HighlightRenderer(arrowRenderer);
-const arrowRendererInstance = new ArrowRenderer(boardElement);
-
 const highlightManager = new HighlightManager(highlightRenderer, engine);
 
-// Initialize shortcuts
+const tooltipManager = new TooltipManager(boardElement);
+highlightManager.setTooltipManager(tooltipManager);
+
+const legend = new ConceptLegend(document.body);
+legend.addConceptSection("pawnStructure", pawnStructure.getVisualizer());
+legend.render();
+
 const shortcutManager = new ShortcutManager(highlightManager, engine);
 
-// Register additional shortcuts if needed
-shortcutManager.register("ctrl+shift+p", "pawnStructure"); // Alternative
+boardElement.addEventListener("mouseover", (e) => {
+  const highlightEl = e.target.closest("[data-highlight]");
+  if (!highlightEl) return;
 
-// Listen for position changes (if you have moves)
-document.addEventListener("positionChanged", () => {
-  highlightManager.onPositionChange();
+  const concept = highlightEl.getAttribute("data-concept");
+  const type = highlightEl.getAttribute("data-type");
+
+  const highlights = highlightManager.getLastHighlights();
+  const highlight = highlights.find(
+    (h) => h.concept === concept && h.metadata?.type === type,
+  );
+
+  // console.log("highlightEl:", highlights);
+
+  if (highlight) {
+    tooltipManager.show(highlight, e);
+  }
 });
 
-// For AI logging
-document.addEventListener("conceptAnalyzed", (event) => {
-  console.log("AI Analysis complete:", event.detail);
-  // Here you could send to your AI service
+boardElement.addEventListener("mouseout", (e) => {
+  if (e.target.closest("[data-highlight]")) {
+    tooltipManager.hide();
+  }
+});
+
+// Keyboard shortcuts
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.key === "l") {
+    e.preventDefault();
+    legend.toggle();
+  }
 });
 
 addEventListeners(handleClick);
-
-// arrowRendererInstance.render([
-//   {
-//     id: "test-arrow-1",
-//     type: "arrow",
-//     from: "c2",
-//     to: "d4",
-//     color: "rgba(23, 109, 135, 0.8)",
-//     thickness: 4,
-//     priority: 10,
-//   },
-// ]);
-
-// updateControlLayers(game.board);
 
 let selectedSquare = null;
 
