@@ -1,12 +1,5 @@
 export class HighlightManager {
   constructor(renderer, engine) {
-    if (!renderer) {
-      console.error("HighlightRenderer is required but was not provided");
-    }
-
-    if (!engine) {
-      console.error("Engine is required but was not provided");
-    }
     this.renderer = renderer;
     this.engine = engine;
     this.activeConcepts = new Set();
@@ -33,6 +26,7 @@ export class HighlightManager {
   }
 
   applyConcept(name) {
+    // console.log(`Applying concept: ${name}`);
     const highlights = this.engine.getConceptHighlights(name);
 
     if (!Array.isArray(highlights)) {
@@ -44,6 +38,8 @@ export class HighlightManager {
     }
 
     this.lastHighlights = [...this.lastHighlights, ...highlights];
+
+    // console.log("this.lastHighlights:", this.lastHighlights);
 
     this.renderer.renderMany(highlights);
 
@@ -99,11 +95,6 @@ export class HighlightManager {
     const index = parseInt(element.getAttribute("data-highlight-index"));
     const highlight = this.lastHighlights[index];
 
-    // console.log("Mouse entered highlight element:", {
-    //   element,
-    //   index,
-    //   highlight,
-    // });
     if (highlight && this.tooltipManager) {
       const concept = highlight.concept;
       const conceptObj = this.engine.getConcept(concept);
@@ -112,6 +103,7 @@ export class HighlightManager {
         const visualizer = conceptObj.getVisualizer();
         if (visualizer && visualizer.getEducationalContent) {
           const educational = visualizer.getEducationalContent(highlight);
+          // console.log("Educational content for highlight:", educational);
           if (educational) {
             highlight.description = educational.description;
             highlight.label = educational.label;
@@ -119,7 +111,7 @@ export class HighlightManager {
         }
       }
 
-      this.tooltipManager.show(highlight, event);
+      // this.tooltipManager.show(highlight, event);
     }
   }
 

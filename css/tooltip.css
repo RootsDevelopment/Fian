@@ -1,0 +1,54 @@
+
+.chess-tooltip {
+    animation: tooltipFadeIn 0.15s ease;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chess-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 20px;
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    transform: rotate(45deg);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+/* styles/tooltip.css */
+.chess-tooltip.pinned {
+    pointer-events: auto !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    animation: tooltipPop 0.2s ease;
+}
+
+.chess-tooltip.pinned .unpin-btn:hover {
+    background: #444 !important;
+    transform: scale(1.1);
+}
+
+@keyframes tooltipPop {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

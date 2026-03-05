@@ -66,16 +66,6 @@ export class HighlightRenderer {
           `Square not found: ${squareName} (tried data-square and data-row/data-col)`,
         );
 
-        // Debug: Log available squares
-        const allSquares = document.querySelectorAll("[data-row]");
-        // console.log(
-        //   "Available squares:",
-        //   Array.from(allSquares).map((el) => ({
-        //     row: el.getAttribute("data-row"),
-        //     col: el.getAttribute("data-col"),
-        //   })),
-        // );
-
         return;
       }
 

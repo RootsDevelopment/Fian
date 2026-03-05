@@ -15,9 +15,10 @@ const passedPawn = "8/8/8/3P4/8/8/8/8";
 const backwardPawn = "8/8/8/3P4/2P5/1P6/8/8";
 const pawnChain = "8/1ppp4/8/8/3P4/2P5/1P6/8";
 const iqpPosition = "8/8/8/3k4/3P4/3K4/8/8 w - - 0 1";
+const x = "6k1/5ppp/8/8/P7/5PP1/6K1/8 w - - 0 1";
 
 const boardElement = document.getElementById("board");
-const game = new Game([isolatedPawns, "w", "KQkq", "-", "0", "1"]);
+const game = new Game([x, "w", "KQkq", "-", "0", "1"]);
 renderBoard(game.board);
 
 const arrowRenderer = new ArrowRenderer(boardElement);
@@ -37,9 +38,14 @@ legend.render();
 
 const shortcutManager = new ShortcutManager(highlightManager, engine);
 
+let hoverTimeout = null;
 boardElement.addEventListener("mouseover", (e) => {
   const highlightEl = e.target.closest("[data-highlight]");
   if (!highlightEl) return;
+
+  if (hoverTimeout) {
+    clearTimeout(hoverTimeout);
+  }
 
   const concept = highlightEl.getAttribute("data-concept");
   const type = highlightEl.getAttribute("data-type");
@@ -52,21 +58,47 @@ boardElement.addEventListener("mouseover", (e) => {
   // console.log("highlightEl:", highlights);
 
   if (highlight) {
-    tooltipManager.show(highlight, e);
+    tooltipManager.show(highlight, e, false);
   }
 });
 
 boardElement.addEventListener("mouseout", (e) => {
-  if (e.target.closest("[data-highlight]")) {
+  const highlightEl = e.target.closest("[data-highlight]");
+  if (!highlightEl) return;
+
+  // Small delay to prevent flicker when moving between squares
+  hoverTimeout = setTimeout(() => {
     tooltipManager.hide();
-  }
+  }, 50);
 });
 
+boardElement.addEventListener("click", (e) => {
+  const highlightEl = e.target.closest("[data-highlight]");
+  if (!highlightEl) return;
+
+  const concept = highlightEl.getAttribute("data-concept");
+  const type = highlightEl.getAttribute("data-type");
+
+  const highlights = highlightManager.getLastHighlights();
+  const highlight = highlights.find(
+    (h) => h.concept === concept && h.metadata?.type === type,
+  );
+
+  if (highlight) {
+    tooltipManager.pinHighlight(highlight, e);
+  }
+});
 // Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "l") {
     e.preventDefault();
     legend.toggle();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    tooltipManager.unpinHighlight();
   }
 });
 

@@ -57,8 +57,8 @@ export class PawnStructureDetector {
     findings.push(...this._detectDoubled(fileMap, color));
     findings.push(...this._detectIsolated(fileMap, color));
     findings.push(...this._detectPassed(pawns, enemyPawns, color));
-    findings.push(...this._detectBackward(pawns, enemyPawns, color));
-    findings.push(...this._detectChains(pawns, color));
+    // findings.push(...this._detectBackward(pawns, enemyPawns, color));
+    // findings.push(...this._detectChains(pawns, color));
 
     return findings;
   }
@@ -118,13 +118,91 @@ export class PawnStructureDetector {
 
     pawns.forEach((pawn) => {
       if (this._isPassedPawn(pawn, enemyPawns, direction, lastRank)) {
+        const file = FILES[pawn.col];
+        const rank = pawn.row;
+        const promotionRank = color === "white" ? 8 : 1;
+        const distanceToPromotion = color === "white" ? 8 - rank : rank - 1;
+
         findings.push({
           type: "PASSED",
           color,
           position: { row: pawn.row, col: pawn.col },
           metadata: {
-            promotionSquare: `${FILES[pawn.col]}${color === "white" ? 8 : 1}`,
-            explanation: "No enemy pawns can block the path to promotion",
+            // Basic info
+            type: "passedPawn",
+            owner: color,
+            staticEvaluation: color === "white" ? 0.5 : -0.5, // Passed pawns are usually good
+            structural: false,
+            dynamicPotential: true,
+            difficulty: "beginner",
+
+            // Passed pawn specific
+            promotionSquare: `${file}${promotionRank}`,
+            distanceToPromotion: distanceToPromotion,
+            isProtected: this._isPawnProtected(pawn, pawns), // You'll need this helper
+            isBlocked: this._isPawnBlocked(pawn), // You'll need this helper
+
+            // Phase impact
+            phaseImpact: {
+              opening: "rare",
+              middlegame: distanceToPromotion <= 3 ? "dangerous" : "potential",
+              endgame: "decisive",
+            },
+
+            // Key squares
+            keySquares: {
+              promotion: `${file}${promotionRank}`,
+              blockade: this._getBlockadeSquare(pawn, color), // Square in front
+              supportPoints: this._getSupportSquares(pawn, color), // Squares where pieces can support
+            },
+
+            // Strategic plans
+            plans: {
+              forOwner: [
+                distanceToPromotion <= 3
+                  ? "Push immediately!"
+                  : "Advance step by step",
+                "Trade pieces to clear the path",
+                "Use king to support in endgame",
+                "Place rook behind the passed pawn",
+              ],
+              againstOwner: [
+                "Blockade with knight or king",
+                "Attack the base of the pawn chain",
+                "Trade passed pawn for less valuable pawn",
+                "Create counterplay elsewhere",
+              ],
+            },
+
+            explanation: {
+              beginner:
+                "This pawn has no enemy pawns in front of it on its file or adjacent files. It's free to run to promotion!",
+              intermediate:
+                "A passed pawn is a major advantage. It can distract the opponent's pieces or promote to a queen.",
+              advanced:
+                "Passed pawns increase in value as pieces are traded. A protected passed pawn is especially powerful as it cannot be captured by the enemy king.",
+            },
+
+            // Key moments/patterns
+            keyMoments: [
+              distanceToPromotion <= 2 ? "Immediate promotion threat" : null,
+              this._isPawnProtected(pawn, pawns)
+                ? "Protected passed pawn - very strong"
+                : null,
+              `Creates a ${distanceToPromotion}-move threat`,
+            ].filter(Boolean),
+
+            // Additional metadata for rich display
+            description: {
+              strength: "strength",
+              label: `${color === "white" ? "White" : "Black"} Passed Pawn`,
+              description: `A passed pawn on ${file}${rank} with a clear path to promotion${this._isPawnProtected(pawn, pawns) ? " (protected)" : ""}.`,
+              advice: this._getPassedPawnAdvice(
+                pawn,
+                color,
+                distanceToPromotion,
+              ),
+            },
           },
         });
       }
@@ -241,6 +319,61 @@ export class PawnStructureDetector {
     });
 
     return findings;
+  }
+
+  // Add these helper methods to your pawn structure class
+
+  _isPawnProtected(pawn, friendlyPawns) {
+    // Check if pawn is protected by another friendly pawn
+    const protectionSquares = [
+      { row: pawn.row - 1, col: pawn.col - 1 },
+      { row: pawn.row - 1, col: pawn.col + 1 },
+    ];
+
+    return friendlyPawns.some((p) =>
+      protectionSquares.some((sq) => sq.row === p.row && sq.col === p.col),
+    );
+  }
+
+  _isPawnBlocked(pawn) {
+    // Check if square in front is occupied
+    const forwardRow = pawn.color === "white" ? pawn.row - 1 : pawn.row + 1;
+    // You'll need access to the board to check if square is occupied
+    return this.board[forwardRow]?.[pawn.col] !== null;
+  }
+
+  _getBlockadeSquare(pawn, color) {
+    const forwardRow = color === "white" ? pawn.row - 1 : pawn.row + 1;
+    return `${FILES[pawn.col]}${forwardRow}`;
+  }
+
+  _getSupportSquares(pawn, color) {
+    const supportSquares = [];
+    const backwardRow = color === "white" ? pawn.row + 1 : pawn.row - 1;
+
+    // Squares where pieces can support the passed pawn
+    if (pawn.col > 0) {
+      supportSquares.push(`${FILES[pawn.col - 1]}${backwardRow}`);
+    }
+    if (pawn.col < 7) {
+      supportSquares.push(`${FILES[pawn.col + 1]}${backwardRow}`);
+    }
+
+    return supportSquares;
+  }
+
+  _getPassedPawnAdvice(pawn, color, distance) {
+    const baseAdvice = `Push the passed pawn! It's a major advantage.`;
+
+    if (distance <= 2) {
+      return `${baseAdvice} It's only ${distance} square${distance === 1 ? "" : "s"} from promotion - push now!`;
+    }
+
+    if (this._isPawnBlocked(pawn)) {
+      return `The pawn is blocked. Trade pieces to clear the path or create a breakthrough.`;
+    }
+
+    return baseAdvice;
   }
 }
 

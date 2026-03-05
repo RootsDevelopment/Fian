@@ -108,12 +108,14 @@ export class PawnStructureVisualizer {
     const highlights = [];
 
     highlights.push(...this.colorToHighlights(analysis.white, "white"));
-    highlights.push(...this.colorToHighlights(analysis.black, "black"));
+    // highlights.push(...this.colorToHighlights(analysis.black, "black"));
 
+    console.log("Generated highlights:", highlights);
     return highlights;
   }
 
   getEducationalContent(highlight) {
+    // console.log("Getting educational content for highlight:", highlight);
     const type = highlight.metadata?.type;
 
     if (!type || !this.descriptions[type]) return null;
@@ -152,7 +154,6 @@ export class PawnStructureVisualizer {
       };
 
       if (finding.type === "CHAIN_LINK") {
-        // Convert to chess squares
         const fromSquare = toSquare(finding.position.row, finding.position.col);
         const toSquare_ = toSquare(finding.target.row, finding.target.col);
 
@@ -166,31 +167,17 @@ export class PawnStructureVisualizer {
           if (fromRank < toRank) {
             validFrom = fromSquare;
             validTo = toSquare_;
-            // console.log("White arrow correct:", fromSquare, "→", toSquare_);
           } else {
             validFrom = toSquare_;
             validTo = fromSquare;
-            // console.log(
-            //   "White arrow reversed, swapping:",
-            //   validFrom,
-            //   "→",
-            //   validTo,
-            // );
           }
         } else {
           if (fromRank > toRank) {
             validFrom = fromSquare;
             validTo = toSquare_;
-            // console.log("Black arrow correct:", fromSquare, "→", toSquare_);
           } else {
             validFrom = toSquare_;
             validTo = fromSquare;
-            // console.log(
-            //   "Black arrow reversed, swapping:",
-            //   validFrom,
-            //   "→",
-            //   validTo,
-            // );
           }
         }
 

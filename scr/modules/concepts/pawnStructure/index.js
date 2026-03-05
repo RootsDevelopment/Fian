@@ -13,6 +13,7 @@ export class PawnStructureConcept extends BaseConcept {
     const detector = new PawnStructureDetector(game.board);
     const analysis = detector.analyze();
 
+    console.log("Pawn Structure Analysis:", analysis);
     return analysis;
   }
 }

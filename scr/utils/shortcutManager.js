@@ -37,6 +37,9 @@ export class ShortcutManager {
       event.preventDefault();
 
       // Toggle the concept
+      console.log(
+        `Toggling concept for shortcut: ${shortcut} -> ${conceptName}`,
+      );
       this.highlightManager.toggleConcept(conceptName);
     }
   }
