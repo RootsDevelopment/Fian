@@ -8,6 +8,7 @@
 } 
 
 #board {
+    position: relative;
     width: 720px;
     height: 720px;
     border: 1px solid rgb(0, 0, 0) ;
@@ -114,3 +115,12 @@
 .onmouseout .promotion-buttons {
     background-color: #fff;
 }
+
+#arrow-layer path {
+    stroke: var(--arrow-color);
+}
+
+.arrow-head {
+    fill: var(--arrow-color);
+}
+
