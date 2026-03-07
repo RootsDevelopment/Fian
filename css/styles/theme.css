@@ -1,0 +1,79 @@
+:root {
+    /* VS Code Dark+ theme colors */
+    --color-bg-primary: #1e1e1e;
+    --color-bg-secondary: #252526;
+    --color-bg-tertiary: #2d2d30;
+    --color-bg-hover: #2a2a2a;
+
+    --color-border: #3e3e42;
+    --color-border-light: #454545;
+
+    --color-text-primary: #cccccc;
+    --color-text-secondary: #9cdcfe;
+    --color-text-muted: #6e7681;
+    --color-text-disabled: #5a5a5a;
+
+    --color-accent-blue: #0078d4;
+    --color-accent-blue-hover: #1c97ea;
+    --color-accent-green: #6a9955;
+    --color-accent-yellow: #dcdcaa;
+    --color-accent-red: #f48771;
+
+    /* Board-specific colors (your existing ones) */
+    --color-board-light: #f0d9b5;
+    --color-board-dark: #575757;
+    --color-board-border: #000000;
+    --color-selected: rgba(0, 0, 0, 0.5);
+    --color-highlight: #2701ff;
+    --color-white-control: rgba(255, 0, 0, 0.5);
+    --color-black-control: rgba(0, 0, 255, 0.5);
+
+    /* Spacing */
+    --space-xxs: 2px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-xxl: 24px;
+
+    /* Panel dimensions */
+    --panel-width: 280px;
+    --panel-header-height: 35px;
+    --control-bar-height: 40px;
+
+    /* Board dimensions */
+    --board-size: min(70vh, 70vw);
+    --board-width: 720px;
+    --board-height: 720px;
+
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Mono', Monaco, 'Cascadia Code', 'Consolas', monospace;
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-md: 13px;
+    --font-size-lg: 14px;
+
+    /* Borders */
+    --border-radius-sm: 2px;
+    --border-radius-md: 3px;
+    --border-radius-lg: 4px;
+    --board-border-radius: 1%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+
+    /* Transitions */
+    --transition-fast: 0.1s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+
+    /* Z-index layers */
+    --z-index-dropdown: 100;
+    --z-index-tooltip: 200;
+    --z-index-modal: 300;
+    --z-index-overlay: 400;
+    --z-index-selected: 10;
+}

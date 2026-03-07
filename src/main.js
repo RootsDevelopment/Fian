@@ -8,105 +8,312 @@ import { ArrowRenderer } from "./ui/arrowRenderer.js";
 import { ShortcutManager } from "./utils/shortcutManager.js";
 import { TooltipManager } from "./utils/tooltipManager.js";
 import { ConceptLegend } from "./ui/conceptLegend.js";
+import { LayoutBuilder } from "./ui/layout/layOutBuilder.js";
 
-const isolatedPawns = "8/2p1pp2/8/8/8/3P4/8/8";
-const doubledPawns = "8/3p4/8/8/3P4/3P4/8/8";
-const passedPawn = "8/8/8/3P4/8/8/8/8";
-const backwardPawn = "8/8/8/3P4/2P5/1P6/8/8";
-const pawnChain = "8/1ppp4/8/8/3P4/2P5/1P6/8";
-const iqpPosition = "8/8/8/3k4/3P4/3K4/8/8 w - - 0 1";
-const x = "6k1/5ppp/8/8/P7/5PP1/6K1/8 w - - 0 1";
+//App state
+const appState = {
+  game: null,
+  boardElement: null,
+  highlightManager: null,
+  highlightRenderer: null,
+  arrowRenderer: null,
+  engine: null,
+  tooltipManager: null,
+  shortcutManager: null,
+  legend: null,
+  currentTool: "pawn-structure",
+  pawnStructureView: null,
+};
 
-const boardElement = document.getElementById("board");
-const game = new Game([x, "w", "KQkq", "-", "0", "1"]);
-renderBoard(game.board);
+// Initialize the app
+document.addEventListener("DOMContentLoaded", async () => {
+  const layoutBuilder = new LayoutBuilder();
+  const panels = layoutBuilder.build();
 
-const arrowRenderer = new ArrowRenderer(boardElement);
-const highlightRenderer = new HighlightRenderer(arrowRenderer);
+  // 2. Get the board element (now inside the layout)
+  appState.boardElement = document.getElementById("board");
 
-const engine = new ConceptEngine(game);
-engine.register("pawnStructure", pawnStructure);
+  // 3. Initialize your existing game with your test position
+  const testPosition = "6k1/5ppp/8/8/P7/5PP1/6K1/8 w - - 0 1";
+  appState.game = new Game([testPosition, "w", "KQkq", "-", "0", "1"]);
 
-const highlightManager = new HighlightManager(highlightRenderer, engine);
+  // 4. Initialize your existing rendering and highlight systems
+  await initializeChessSystems();
 
-const tooltipManager = new TooltipManager(boardElement);
-highlightManager.setTooltipManager(tooltipManager);
+  // 5. Set up the UI event listeners
+  // setupUIEventListeners(panels);
 
-const legend = new ConceptLegend(document.body);
-legend.addConceptSection("pawnStructure", pawnStructure.getVisualizer());
-legend.render();
+  // 6. Set up your existing board interactions
+  // setupBoardInteractions();
 
-const shortcutManager = new ShortcutManager(highlightManager, engine);
-
-let hoverTimeout = null;
-boardElement.addEventListener("mouseover", (e) => {
-  const highlightEl = e.target.closest("[data-highlight]");
-  if (!highlightEl) return;
-
-  if (hoverTimeout) {
-    clearTimeout(hoverTimeout);
-  }
-
-  const concept = highlightEl.getAttribute("data-concept");
-  const type = highlightEl.getAttribute("data-type");
-
-  const highlights = highlightManager.getLastHighlights();
-  const highlight = highlights.find(
-    (h) => h.concept === concept && h.metadata?.type === type,
-  );
-
-  // console.log("highlightEl:", highlights);
-
-  if (highlight) {
-    tooltipManager.show(highlight, e, false);
-  }
+  // 7. Initialize the pawn structure view in the right panel
+  // initializePawnStructureView();
 });
 
-boardElement.addEventListener("mouseout", (e) => {
-  const highlightEl = e.target.closest("[data-highlight]");
-  if (!highlightEl) return;
+async function initializeChessSystems() {
+  // Render the initial board
+  renderBoard(appState.game.board);
 
-  // Small delay to prevent flicker when moving between squares
-  hoverTimeout = setTimeout(() => {
-    tooltipManager.hide();
-  }, 50);
-});
+  // Initialize arrow renderer
+  // appState.arrowRenderer = new ArrowRenderer(appState.boardElement);
 
-boardElement.addEventListener("click", (e) => {
-  const highlightEl = e.target.closest("[data-highlight]");
-  if (!highlightEl) return;
+  // Initialize highlight renderer
+  // appState.highlightRenderer = new HighlightRenderer(appState.arrowRenderer);
 
-  const concept = highlightEl.getAttribute("data-concept");
-  const type = highlightEl.getAttribute("data-type");
+  // Initialize concept engine and register pawn structure
+  // appState.engine = new ConceptEngine(appState.game);
+  // appState.engine.register("pawnStructure", pawnStructure);
 
-  const highlights = highlightManager.getLastHighlights();
-  const highlight = highlights.find(
-    (h) => h.concept === concept && h.metadata?.type === type,
-  );
+  // Initialize highlight manager
+  // appState.highlightManager = new HighlightManager(
+  //   appState.highlightRenderer,
+  //   appState.engine,
+  // );
 
-  if (highlight) {
-    tooltipManager.pinHighlight(highlight, e);
-  }
-});
-// Keyboard shortcuts
-document.addEventListener("keydown", (e) => {
+  // // Initialize tooltip manager
+  // appState.tooltipManager = new TooltipManager(appState.boardElement);
+  // appState.highlightManager.setTooltipManager(appState.tooltipManager);
+
+  // // Initialize shortcut manager
+  // appState.shortcutManager = new ShortcutManager(
+  //   appState.highlightManager,
+  //   appState.engine,
+  // );
+
+  // // Initialize concept legend and add to left panel?
+  // // We'll decide where to place this
+  // appState.legend = new ConceptLegend(document.body);
+  // appState.legend.addConceptSection(
+  //   "pawnStructure",
+  //   pawnStructure.getVisualizer(),
+  // );
+  // appState.legend.render();
+
+  // // Hide the legend initially - we'll integrate it into the left panel
+  // appState.legend.container.style.display = "none";
+}
+
+function setupUIEventListeners(panels) {
+  // Tool selection from left panel
+  document.querySelectorAll("[data-tool]").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const tool = e.currentTarget.dataset.tool;
+      switchTool(tool);
+    });
+  });
+
+  // Control panel actions
+  document.querySelectorAll("[data-action]").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const action = e.currentTarget.dataset.action;
+      handleControlAction(action);
+    });
+  });
+
+  // Keyboard shortcuts (your existing ones plus new ones)
+  document.addEventListener("keydown", handleKeyboardShortcuts);
+}
+
+function setupBoardInteractions() {
+  // Your existing hover logic
+  let hoverTimeout = null;
+
+  appState.boardElement.addEventListener("mouseover", (e) => {
+    const highlightEl = e.target.closest("[data-highlight]");
+    if (!highlightEl) return;
+
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+
+    const concept = highlightEl.getAttribute("data-concept");
+    const type = highlightEl.getAttribute("data-type");
+
+    const highlights = appState.highlightManager.getLastHighlights();
+    const highlight = highlights.find(
+      (h) => h.concept === concept && h.metadata?.type === type,
+    );
+
+    if (highlight) {
+      appState.tooltipManager.show(highlight, e, false);
+    }
+  });
+
+  appState.boardElement.addEventListener("mouseout", (e) => {
+    const highlightEl = e.target.closest("[data-highlight]");
+    if (!highlightEl) return;
+
+    hoverTimeout = setTimeout(() => {
+      appState.tooltipManager.hide();
+    }, 50);
+  });
+
+  appState.boardElement.addEventListener("click", (e) => {
+    const highlightEl = e.target.closest("[data-highlight]");
+    if (!highlightEl) return;
+
+    const concept = highlightEl.getAttribute("data-concept");
+    const type = highlightEl.getAttribute("data-type");
+
+    const highlights = appState.highlightManager.getLastHighlights();
+    const highlight = highlights.find(
+      (h) => h.concept === concept && h.metadata?.type === type,
+    );
+
+    if (highlight) {
+      appState.tooltipManager.pinHighlight(highlight, e);
+    }
+  });
+
+  // Your existing click handler for moves
+  addEventListeners(handleBoardClick);
+}
+
+function handleKeyboardShortcuts(e) {
+  // Your existing shortcuts
   if (e.ctrlKey && e.key === "l") {
     e.preventDefault();
-    legend.toggle();
+    // Toggle legend visibility (maybe move this to a panel)
+    const legend = appState.legend;
+    if (legend) {
+      legend.toggle();
+    }
   }
-});
 
-document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
-    tooltipManager.unpinHighlight();
+    appState.tooltipManager.unpinHighlight();
   }
-});
 
-addEventListeners(handleClick);
+  // Ctrl+P for pawn structure (your existing feature)
+  if (e.ctrlKey && e.key === "p") {
+    e.preventDefault();
+
+    // Switch to pawn structure tool if not already
+    if (appState.currentTool !== "pawn-structure") {
+      switchTool("pawn-structure");
+    }
+
+    // Toggle pawn structure highlights
+    appState.highlightManager.toggleConcept("pawnStructure");
+
+    // Update button state in view
+    if (appState.pawnStructureView) {
+      appState.pawnStructureView.setHighlightButtonState(
+        appState.highlightManager.isActive("pawnStructure"),
+      );
+    }
+  }
+
+  // Ctrl+N for new game
+  if (e.ctrlKey && e.key === "n") {
+    e.preventDefault();
+    handleControlAction("new-game");
+  }
+
+  // Ctrl+F for flip board
+  if (e.ctrlKey && e.key === "f") {
+    e.preventDefault();
+    handleControlAction("flip-board");
+  }
+}
+// const isolatedPawns = "8/2p1pp2/8/8/8/3P4/8/8";
+// const doubledPawns = "8/3p4/8/8/3P4/3P4/8/8";
+// const passedPawn = "8/8/8/3P4/8/8/8/8";
+// const backwardPawn = "8/8/8/3P4/2P5/1P6/8/8";
+// const pawnChain = "8/1ppp4/8/8/3P4/2P5/1P6/8";
+// const iqpPosition = "8/8/8/3k4/3P4/3K4/8/8 w - - 0 1";
+// const x = "6k1/5ppp/8/8/P7/5PP1/6K1/8 w - - 0 1";
+
+// const boardElement = document.getElementById("board");
+// const game = new Game([x, "w", "KQkq", "-", "0", "1"]);
+// renderBoard(game.board);
+
+// const arrowRenderer = new ArrowRenderer(boardElement);
+// const highlightRenderer = new HighlightRenderer(arrowRenderer);
+
+// const engine = new ConceptEngine(game);
+// engine.register("pawnStructure", pawnStructure);
+
+// const highlightManager = new HighlightManager(highlightRenderer, engine);
+
+// const tooltipManager = new TooltipManager(boardElement);
+// highlightManager.setTooltipManager(tooltipManager);
+
+// const legend = new ConceptLegend(document.body);
+// legend.addConceptSection("pawnStructure", pawnStructure.getVisualizer());
+// legend.render();
+
+// const shortcutManager = new ShortcutManager(highlightManager, engine);
+
+// let hoverTimeout = null;
+// boardElement.addEventListener("mouseover", (e) => {
+//   const highlightEl = e.target.closest("[data-highlight]");
+//   if (!highlightEl) return;
+
+//   if (hoverTimeout) {
+//     clearTimeout(hoverTimeout);
+//   }
+
+//   const concept = highlightEl.getAttribute("data-concept");
+//   const type = highlightEl.getAttribute("data-type");
+
+//   const highlights = highlightManager.getLastHighlights();
+//   const highlight = highlights.find(
+//     (h) => h.concept === concept && h.metadata?.type === type,
+//   );
+
+//   // console.log("highlightEl:", highlights);
+
+//   if (highlight) {
+//     tooltipManager.show(highlight, e, false);
+//   }
+// });
+
+// boardElement.addEventListener("mouseout", (e) => {
+//   const highlightEl = e.target.closest("[data-highlight]");
+//   if (!highlightEl) return;
+
+//   // Small delay to prevent flicker when moving between squares
+//   hoverTimeout = setTimeout(() => {
+//     tooltipManager.hide();
+//   }, 50);
+// });
+
+// boardElement.addEventListener("click", (e) => {
+//   const highlightEl = e.target.closest("[data-highlight]");
+//   if (!highlightEl) return;
+
+//   const concept = highlightEl.getAttribute("data-concept");
+//   const type = highlightEl.getAttribute("data-type");
+
+//   const highlights = highlightManager.getLastHighlights();
+//   const highlight = highlights.find(
+//     (h) => h.concept === concept && h.metadata?.type === type,
+//   );
+
+//   if (highlight) {
+//     tooltipManager.pinHighlight(highlight, e);
+//   }
+// });
+// // Keyboard shortcuts
+// document.addEventListener("keydown", (e) => {
+//   if (e.ctrlKey && e.key === "l") {
+//     e.preventDefault();
+//     legend.toggle();
+//   }
+// });
+
+// document.addEventListener("keydown", (e) => {
+//   if (e.key === "Escape") {
+//     tooltipManager.unpinHighlight();
+//   }
+// });
+
+// addEventListeners(handleClick);
 
 let selectedSquare = null;
 
-async function handleClick(e) {
+async function handleBoardClick(e) {
   const square = e.target.closest(".square");
   if (!square) return;
 

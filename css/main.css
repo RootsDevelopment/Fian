@@ -1,0 +1,12 @@
+/* Styles - order matters for cascade */
+@import 'styles/theme.css';
+@import 'styles/layout.css';
+
+/* Components */
+@import 'components/leftPanel/leftPanel.css';
+@import 'components/rightPanel/rightPanel.css';
+@import 'components/controlsPanel/controlsPanel.css';
+@import 'components/concepts/conceptCard.css';
+/* @import 'components/aiCoach/coach.css'; */
+@import 'components/board/board.css';
+@import 'components/board/overlay.css';

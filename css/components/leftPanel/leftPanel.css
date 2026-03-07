@@ -1,0 +1,83 @@
+.left-panel {
+    width: var(--panel-width);
+    background-color: var(--color-bg-secondary);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.left-panel__header {
+    height: var(--panel-header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.left-panel__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+}
+
+/* Navigation menu */
+.nav-menu {
+    list-style: none;
+}
+
+.nav-menu__item {
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xxs);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-text-primary);
+    transition: background-color var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.nav-menu__item:hover {
+    background-color: var(--color-bg-tertiary);
+}
+
+.nav-menu__item--active {
+    background-color: var(--color-bg-tertiary);
+    border-left: 2px solid var(--color-accent-blue);
+}
+
+.nav-menu__icon {
+    opacity: 0.7;
+    font-size: var(--font-size-lg);
+    width: 20px;
+    text-align: center;
+}
+
+.nav-menu__badge {
+    margin-left: auto;
+    background-color: var(--color-bg-tertiary);
+    padding: var(--space-xxs) var(--space-xs);
+    border-radius: 10px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+/* Section titles */
+.section-title {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: var(--space-lg) 0 var(--space-sm) 0;
+    padding-left: var(--space-xs);
+    letter-spacing: 0.5px;
+}
