@@ -33,10 +33,10 @@ export async function initializeChessSystems(appState) {
   appState.highlightManager.setTooltipManager(appState.tooltipManager);
 
   // Initialize shortcut manager
-  appState.shortcutManager = new ShortcutManager(
-    appState.highlightManager,
-    appState.engine,
-  );
+  //   appState.shortcutManager = new ShortcutManager(
+  //     appState.highlightManager,
+  //     appState.engine,
+  //   );
 
   // Initialize concept legend (hidden by default)
   appState.legend = new ConceptLegend(document.body);

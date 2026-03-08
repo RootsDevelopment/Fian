@@ -1,0 +1,71 @@
+/* Highlight layers - these sit on top of squares */
+.highlight-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: all;
+    cursor: help;
+    border-radius: 4px;
+    transition: all 0.1s ease;
+    z-index: 10;
+}
+
+/* Different highlight types - using your theme colors */
+.highlight-layer[data-type="isolated"] {
+    background-color: rgba(244, 135, 113, 0.3);
+    box-shadow: inset 0 0 0 2px var(--color-error);
+}
+
+.highlight-layer[data-type="doubled"] {
+    background-color: rgba(220, 220, 170, 0.3);
+    box-shadow: inset 0 0 0 2px var(--color-warning);
+}
+
+.highlight-layer[data-type="passed"] {
+    background-color: rgba(106, 153, 85, 0.3);
+    box-shadow: inset 0 0 0 2px var(--color-success);
+}
+
+.highlight-layer[data-type="backward"] {
+    background-color: rgba(156, 220, 254, 0.3);
+    box-shadow: inset 0 0 0 2px var(--color-info);
+}
+
+.highlight-layer[data-type="chain"] {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.05));
+    box-shadow: inset 0 0 0 2px gold;
+}
+
+/* Hover effect for highlights */
+.highlight-layer:hover {
+    filter: brightness(1.2);
+    box-shadow: inset 0 0 0 3px white;
+}
+
+/* Default highlight if no type specified */
+.highlight-layer:not([data-type]) {
+    background-color: rgba(255, 255, 0, 0.3);
+}
+
+/* Arrow layer */
+#arrow-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.arrow {
+    stroke: var(--color-accent-blue);
+    stroke-width: 2;
+    fill: none;
+}
+
+.arrow-head {
+    fill: var(--color-accent-blue);
+}

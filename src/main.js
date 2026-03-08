@@ -7,6 +7,9 @@ import { LayoutBuilder } from "./ui/layout/layOutBuilder.js";
 import { fenHandler } from "./handlers/fenHandler.js";
 import { toolHandler } from "./handlers/toolHandler.js";
 import { examples } from "./utils/examples.js";
+import { TopInsightBar } from "./ui/insights/topInsightBar.js";
+import { InsightList } from "./ui/insights/insightList.js";
+import { analyzeHandler } from "./handlers/analyzeHandle.js";
 
 // Wire up callbacks
 appState.callbacks = {
@@ -15,6 +18,7 @@ appState.callbacks = {
   onResetBoard: () => fenHandler.reset(appState),
   onFlipBoard: () => fenHandler.flip(appState),
   onSelectTool: (tool) => toolHandler.switch(appState, tool),
+  onAnalyze: () => analyzeHandler.analyze(appState),
 };
 
 // Initialize the app
@@ -35,7 +39,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize all panels
   panels.leftPanel.initialize(appState);
   panels.rightPanel.initialize(appState);
+
+  setTimeout(() => {
+    const insightContainer = document.getElementById("insight-list-container");
+    if (insightContainer) {
+      appState.insightList = new InsightList(insightContainer, appState);
+    }
+  }, 100);
+
   panels.controlsPanel.initialize(appState);
+
+  // In your DOMContentLoaded event, after panel initialization:
+  const topInsightBar = new TopInsightBar(
+    document.querySelector(".app-main"),
+    appState,
+  );
+  // Insert it at the top of app-main
+  const appMain = document.querySelector(".app-main");
+  appMain.insertBefore(topInsightBar.element, appMain.firstChild);
+
+  appState.topInsightBar = topInsightBar;
 
   // Set up interactions
   setupBoardInteractions(appState);

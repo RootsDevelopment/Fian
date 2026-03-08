@@ -17,6 +17,12 @@ export const appState = {
   shortcutManager: null,
   legend: null,
 
+  topInsightBar: null,
+  insightList: null,
+  insightCard: null,
+  currentInsights: [],
+  pinnedInsights: [],
+
   // Current state
   currentTool: null,
   pawnStructureView: null,
