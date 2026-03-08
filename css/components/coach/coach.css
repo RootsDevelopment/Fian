@@ -1,0 +1,166 @@
+.coach {
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--space-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+
+.coach__header {
+    padding: var(--space-md);
+    background: linear-gradient(90deg, var(--color-accent-blue) 0%, transparent 300%);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.coach__icon {
+    font-size: var(--font-size-lg);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.coach__title {
+    color: white;
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.coach__content {
+    padding: var(--space-md);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.coach__message {
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-left: 3px solid var(--color-accent-blue);
+    position: relative;
+}
+
+.coach__message:last-child {
+    margin-bottom: 0;
+}
+
+.coach__message-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.coach__message-concept {
+    background-color: var(--color-accent-blue);
+    color: white;
+    padding: 2px var(--space-sm);
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.coach__message-text {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    margin-bottom: var(--space-sm);
+}
+
+.coach__message-squares {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+.coach__square-tag {
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    padding: 2px var(--space-xs);
+    font-size: var(--font-size-xs);
+    font-family: 'SF Mono', monospace;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.coach__square-tag:hover {
+    background-color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: white;
+}
+
+.coach__thinking {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    padding: var(--space-sm);
+    font-style: italic;
+}
+
+.coach__thinking-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.coach__thinking-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-text-muted);
+    border-radius: 50%;
+    animation: pulse 1.4s infinite;
+}
+
+.coach__thinking-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.coach__thinking-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+
+    0%,
+    60%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.coach__empty {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    padding: var(--space-xl);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--border-radius-md);
+}
+
+.coach__empty-icon {
+    font-size: 32px;
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+}
+
+.coach__action-btn {
+    width: 100%;
+    margin-top: var(--space-md);
+}

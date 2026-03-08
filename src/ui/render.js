@@ -1,6 +1,9 @@
-const boardElement = document.getElementById("board");
-
 export default function renderBoard(boardInstance) {
+  const boardElement = document.getElementById("board");
+  if (!boardElement) {
+    console.error("Board element not found");
+    return;
+  }
   boardElement.innerHTML = "";
 
   for (let row = 0; row < 8; row++) {
@@ -29,6 +32,7 @@ export default function renderBoard(boardInstance) {
 }
 
 export function addEventListeners(handleClick) {
+  const boardElement = document.getElementById("board");
   boardElement.addEventListener("click", handleClick);
 }
 

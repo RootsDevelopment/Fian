@@ -1,0 +1,204 @@
+
+.left-panel__header {
+    height: var(--panel-header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.left-panel__content {
+    flex: 1 1 0;
+    overflow-y: auto;
+    min-height: 0;
+    padding: var(--space-md) 0;
+}
+
+/* Section styling */
+.left-panel__section {
+    margin-bottom: var(--space-xl);
+}
+
+.left-panel__section:last-child {
+    margin-bottom: var(--space-lg);
+    /* Space at bottom */
+}
+
+.left-panel__section-title {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0 var(--space-lg);
+    margin-bottom: var(--space-sm);
+    letter-spacing: 0.5px;
+}
+
+/* Navigation menu */
+.nav-menu {
+    list-style: none;
+}
+
+.nav-menu__item {
+    padding: var(--space-sm) var(--space-lg);
+    margin-bottom: var(--space-xxs);
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-text-primary);
+    transition: background-color var(--transition-fast);
+    font-size: var(--font-size-sm);
+    position: relative;
+    border-left: 2px solid transparent;
+}
+
+.nav-menu__item:hover {
+    background-color: var(--color-bg-tertiary);
+}
+
+.nav-menu__item--active {
+    background-color: var(--color-bg-tertiary);
+    border-left: 2px solid var(--color-accent-blue);
+}
+
+.nav-menu__item--active .nav-menu__icon {
+    color: var(--color-accent-blue);
+}
+
+.nav-menu__icon {
+    opacity: 0.8;
+    font-size: var(--font-size-lg);
+    width: 20px;
+    text-align: center;
+}
+
+.nav-menu__label {
+    flex: 1;
+}
+
+.nav-menu__badge {
+    margin-left: auto;
+    background-color: var(--color-bg-tertiary);
+    padding: var(--space-xxs) var(--space-xs);
+    border-radius: 10px;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+}
+
+/* Section titles */
+.section-title {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: var(--space-lg) 0 var(--space-sm) 0;
+    padding-left: var(--space-xs);
+    letter-spacing: 0.5px;
+}
+
+/* Action buttons for POSITION section */
+.action-buttons {
+    padding: 0 var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+.action-btn {
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all var(--transition-fast);
+    width: 100%;
+}
+
+.action-btn:hover {
+    background-color: var(--color-bg-tertiary);
+    border-color: var(--color-accent-blue);
+}
+
+.action-btn__icon {
+    font-size: var(--font-size-lg);
+    width: 20px;
+    text-align: center;
+}
+
+.action-btn__label {
+    flex: 1;
+    text-align: left;
+}
+
+.action-btn--primary {
+    background-color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: white;
+}
+
+.action-btn--primary:hover {
+    background-color: var(--color-accent-blue-hover);
+    border-color: var(--color-accent-blue-hover);
+}
+
+/* Divider between sections */
+.left-panel__divider {
+    height: 1px;
+    background-color: var(--color-border);
+    margin: var(--space-md) var(--space-lg);
+}
+
+/* FEN Input area (hidden by default, shown when Load FEN clicked) */
+.fen-input-container {
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--color-bg-tertiary);
+    margin-bottom: var(--space-md);
+    display: none;
+}
+
+.fen-input-container--visible {
+    display: block;
+}
+
+.fen-input {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    padding: var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    font-family: 'SF Mono', monospace;
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--space-sm);
+}
+
+.fen-input:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+}
+
+.fen-input-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.fen-btn {
+    flex: 1;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-xs);
+}

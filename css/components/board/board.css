@@ -1,0 +1,96 @@
+.square {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.piece {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+    object-fit: contain;
+}
+
+.light {
+    background-color: var(--color-board-light);
+}
+
+.dark {
+    background-color: var(--color-board-dark);
+}
+
+.square.selected {
+    background-color: var(--color-selected) !important;
+    outline: 1px solid yellow;
+    z-index: var(--z-index-selected);
+}
+
+.square.highlight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.square.highlight::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-highlight);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.square.white-control {
+    box-shadow: inset 0 0 10px var(--color-white-control);
+    border: 1px dashed white;
+}
+
+.square.black-control {
+    box-shadow: inset 0 0 10px var(--color-black-control);
+    border: 1px dashed black;
+}
+
+.square.white-control.black-control {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+#board.flipped {
+    transform: rotate(180deg);
+}
+
+#board.flipped .square {
+    transform: rotate(180deg);
+}
+
+#board.flipped .piece {
+    transform: rotate(180deg);
+}
+
+#arrow-layer path {
+    stroke: var(--arrow-color, var(--color-accent-blue));
+}
+
+.arrow-head {
+    fill: var(--arrow-color, var(--color-accent-blue));
+}
+
+@media (min-width: 600px) {
+    .piece {
+        max-width: 50px;
+        max-height: 80px;
+    }
+}
+
+.light {
+    background-color: var(--color-board-light);
+}
+
+.dark {
+    background-color: var(--color-board-dark);
+}

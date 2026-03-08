@@ -1,0 +1,82 @@
+.controls-panel {
+    height: var(--control-bar-height);
+    background-color: var(--color-bg-tertiary);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+}
+
+.control-group {
+    display: flex;
+    gap: var(--space-md);
+    margin-right: auto;
+    align-items: center;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.control-item:hover {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.control-item.active {
+    color: var(--color-accent-blue);
+}
+
+.control-divider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--color-border);
+    margin: 0 var(--space-xs);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-left: auto;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-success);
+}
+
+.indicator-dot.warning {
+    background-color: var(--color-warning);
+}
+
+.indicator-dot.error {
+    background-color: var(--color-error);
+}
+
+.kbd-shortcut {
+    display: inline-flex;
+    gap: var(--space-xxs);
+    margin-left: var(--space-sm);
+}
+
+.kbd {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    padding: 2px var(--space-xs);
+    font-size: var(--font-size-xs);
+    font-family: 'SF Mono', Monaco, monospace;
+    color: var(--color-text-muted);
+}
