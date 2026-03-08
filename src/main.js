@@ -21,9 +21,144 @@ const appState = {
   tooltipManager: null,
   shortcutManager: null,
   legend: null,
-  currentTool: "pawn-structure",
+  currentTool: null,
   pawnStructureView: null,
+  callbacks: {
+    onLoadFEN: (fen) => handleLoadFEN(fen),
+    onLoadExample: () => handleLoadExample(),
+    onResetBoard: () => handleResetBoard(),
+    onFlipBoard: () => handleFlipBoard(),
+    onSelectTool: (tool) => switchTool(tool),
+    // onLoadRecent: (id) => handleLoadRecent(id),
+  },
 };
+
+// FEN Handler
+function handleLoadFEN(fen) {
+  try {
+    const cleanFEN = fen.trim();
+
+    const fenParts = cleanFEN.split(" ");
+
+    if (fenParts.length < 1) {
+      throw new Error("Invalid FEN");
+    }
+
+    const defaultParts = ["w", "KQkq", "-", "0", "1"];
+
+    const fullFenParts = [
+      fenParts[0],
+      fenParts[1] || defaultParts[0],
+      fenParts[2] || defaultParts[1],
+      fenParts[3] || defaultParts[2],
+      fenParts[4] || defaultParts[3],
+      fenParts[5] || defaultParts[4],
+    ];
+
+    // Update game
+    appState.game = new Game(fullFenParts);
+
+    // Re-render board
+    renderBoard(appState.game.board);
+
+    // Clear any existing highlights
+    if (appState.highlightManager) {
+      appState.highlightManager.clearHighlights();
+    }
+
+    // // Update AI coach if it exists
+    // if (appState.rightPanel && appState.rightPanel.aiCoach) {
+    //   appState.rightPanel.aiCoach.clear();
+    // }
+
+    // // Update pawn structure view if active
+    // if (appState.currentTool === 'pawn-structure' && appState.pawnStructureView) {
+    //   const analysis = appState.engine.analyzeConcept('pawnStructure');
+    //   appState.pawnStructureView.update(analysis);
+    // }
+
+    // Update status bar
+    updateStatusBar();
+
+    // console.log("FEN loaded successfully:", cleanFEN);
+  } catch (error) {
+    console.error("Error loading FEN:", error);
+
+    const statusEl = document.getElementById("position-status");
+    if (statusEl) {
+      statusEl.textContent = "Invalid FEN";
+      statusEl.style.color = "var(--color-error)";
+      setTimeout(() => {
+        statusEl.style.color = "";
+        updateStatusBar();
+      }, 2000);
+    }
+
+    // Optional: Show error in the FEN input
+    const fenInput = document.getElementById("fen-input");
+    if (fenInput) {
+      fenInput.style.borderColor = "var(--color-error)";
+      setTimeout(() => {
+        fenInput.style.borderColor = "";
+      }, 2000);
+    }
+  }
+}
+
+// Example positions for Load Example
+const examples = {
+  italian: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+  sicilian: "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2",
+  french: "rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+  caro: "rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+};
+
+function handleLoadExample() {
+  // You could cycle through examples or show a dropdown
+  // For now, load the Italian Game
+  handleLoadFEN(examples.italian);
+
+  // Update FEN input field to show the loaded FEN
+  const fenInput = document.getElementById("fen-input");
+  if (fenInput) {
+    fenInput.value = examples.italian;
+  }
+}
+
+function handleResetBoard() {
+  const startPosition =
+    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  handleLoadFEN(startPosition);
+
+  // Update FEN input
+  const fenInput = document.getElementById("fen-input");
+  if (fenInput) {
+    fenInput.value = startPosition;
+  }
+}
+
+function handleFlipBoard() {
+  const board = document.getElementById("board");
+  board.classList.toggle("flipped");
+
+  // Update status
+  const statusEl = document.getElementById("position-status");
+  if (statusEl) {
+    statusEl.textContent = board.classList.contains("flipped")
+      ? "Board flipped"
+      : "Board normal";
+    setTimeout(updateStatusBar, 1500);
+  }
+}
+
+function updateStatusBar() {
+  const statusEl = document.getElementById("position-status");
+  if (statusEl && appState.game) {
+    const turn = appState.game.turn === "w" ? "White" : "Black";
+    statusEl.textContent = `${turn} to move`;
+    statusEl.style.color = "";
+  }
+}
 
 // Initialize the app
 document.addEventListener("DOMContentLoaded", async () => {
@@ -34,11 +169,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   appState.boardElement = document.getElementById("board");
 
   // 3. Initialize your existing game with your test position
-  const testPosition = "6k1/5ppp/8/8/P7/5PP1/6K1/8 w - - 0 1";
-  appState.game = new Game([testPosition, "w", "KQkq", "-", "0", "1"]);
+  const startPosition = "6k1/5ppp/8/8/P7/5PP1/6K1/8";
+  appState.game = new Game([startPosition, "w", "KQkq", "-", "0", "1"]);
 
   // 4. Initialize your existing rendering and highlight systems
   await initializeChessSystems();
+
+  // 5. Initialize all panels
+  panels.leftPanel.initialize(appState);
+  panels.rightPanel.initialize(appState);
+  panels.controlsPanel.initialize(appState);
 
   // 5. Set up the UI event listeners
   // setupUIEventListeners(panels);

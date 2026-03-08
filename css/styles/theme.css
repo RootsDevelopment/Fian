@@ -19,6 +19,27 @@
     --color-accent-yellow: #dcdcaa;
     --color-accent-red: #f48771;
 
+    --color-success: #6a9955;
+    --color-success-bg: rgba(106, 153, 85, 0.1);
+    --color-success-border: #6a9955;
+    
+    --color-error: #f48771;
+    --color-error-bg: rgba(244, 135, 113, 0.1);
+    --color-error-border: #f48771;
+    
+    --color-warning: #dcdcaa;
+    --color-warning-bg: rgba(220, 220, 170, 0.1);
+    --color-warning-border: #dcdcaa;
+    
+    --color-info: #9cdcfe;
+    --color-info-bg: rgba(156, 220, 254, 0.1);
+    
+    /* Status text colors */
+    --color-success-text: #89d185;
+    --color-error-text: #f48771;
+    --color-warning-text: #dcdcaa;
+    --color-info-text: #9cdcfe;   
+
     /* Board-specific colors (your existing ones) */
     --color-board-light: #f0d9b5;
     --color-board-dark: #575757;

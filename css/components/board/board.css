@@ -1,19 +1,3 @@
-#board {
-    position: relative;
-    width: var(--board-width);
-    height: var(--board-height);
-    max-width: var(--board-size);
-    max-height: var(--board-size);
-    border: 1px solid var(--color-board-border);
-    border-radius: var(--board-border-radius);
-    background-color: var(--color-board-light);
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    gap: 0;
-    box-shadow: var(--shadow-md);
-}
-
 .square {
     position: relative;
     width: 100%;
@@ -21,14 +5,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .piece {
-    width: 50px;
-    height: 80px;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     pointer-events: none;
-    max-width: 80%;
-    max-height: 80%;
     object-fit: contain;
 }
 
@@ -40,14 +25,12 @@
     background-color: var(--color-board-dark);
 }
 
-/* Selection styles */
 .square.selected {
     background-color: var(--color-selected) !important;
     outline: 1px solid yellow;
     z-index: var(--z-index-selected);
 }
 
-/* Move highlight styles */
 .square.highlight {
     display: flex;
     justify-content: center;
@@ -63,7 +46,6 @@
     opacity: 0.7;
 }
 
-/* Control layer styles */
 .square.white-control {
     box-shadow: inset 0 0 10px var(--color-white-control);
     border: 1px dashed white;
@@ -78,7 +60,6 @@
     background-color: rgba(255, 0, 0, 0.2);
 }
 
-/* Flipped board support */
 #board.flipped {
     transform: rotate(180deg);
 }
@@ -91,11 +72,25 @@
     transform: rotate(180deg);
 }
 
-/* Arrow layer styles */
 #arrow-layer path {
     stroke: var(--arrow-color, var(--color-accent-blue));
 }
 
 .arrow-head {
     fill: var(--arrow-color, var(--color-accent-blue));
+}
+
+@media (min-width: 600px) {
+    .piece {
+        max-width: 50px;
+        max-height: 80px;
+    }
+}
+
+.light {
+    background-color: var(--color-board-light);
+}
+
+.dark {
+    background-color: var(--color-board-dark);
 }
