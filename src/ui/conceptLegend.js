@@ -4,6 +4,7 @@ export class ConceptLegend {
     this.container = container;
     this.legendElement = null;
     this.conceptSections = new Map();
+    this.isVisible = false;
   }
 
   addConceptSection(conceptName, visualizer) {
@@ -24,18 +25,21 @@ export class ConceptLegend {
     this.legendElement.className = "concept-legend";
     this.legendElement.style.cssText = `
       position: fixed;
-      top: 20px;
+      top: 50%;
       right: 20px;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-      padding: 20px;
-      width: 320px;
+      transform: translateY(-50%);
+      background: var(--color-bg-secondary, #252526);
+      border: 1px solid var(--color-border, #3e3e42);
+      border-radius: var(--border-radius-lg, 4px);
+      box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.3));
+      padding: var(--space-lg, 16px);
+      width: 300px;
       max-height: 80vh;
       overflow-y: auto;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: var(--font-family, -apple-system, monospace);
       z-index: 1000;
+      color: var(--color-text-primary, #cccccc);
+      display: ${this.isVisible ? "block" : "none"};
     `;
 
     const header = this.createHeader();
@@ -53,22 +57,35 @@ export class ConceptLegend {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: var(--space-md, 12px);
       position: sticky;
       top: 0;
-      background: white;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      background: var(--color-bg-tertiary, #2d2d30);
+      padding: var(--space-sm, 8px) var(--space-md, 12px);
+      border-bottom: 1px solid var(--color-border, #3e3e42);
+      border-radius: var(--border-radius-sm, 2px) var(--border-radius-sm, 2px) 0 0;
     `;
 
     header.innerHTML = `
-      <h3 style="margin: 0; font-size: 18px; color: #1a1a1a;">📚 Chess Concepts</h3>
-      <button class="legend-close" style="background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
+      <h3 style="margin: 0; font-size: var(--font-size-sm, 12px); color: var(--color-text-secondary, #9cdcfe); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+        📚 Chess Concepts
+      </h3>
+      <button class="legend-close" style="background: none; border: 1px solid var(--color-border, #3e3e42); color: var(--color-text-muted, #6e7681); font-size: 16px; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius-sm, 2px);">✕</button>
     `;
 
     header
       .querySelector(".legend-close")
       .addEventListener("click", () => this.hide());
+
+    const closeBtn = header.querySelector(".legend-close");
+    closeBtn.addEventListener("mouseenter", () => {
+      closeBtn.style.backgroundColor = "var(--color-bg-hover, #2a2a2a)";
+      closeBtn.style.color = "var(--color-text-primary, #cccccc)";
+    });
+    closeBtn.addEventListener("mouseleave", () => {
+      closeBtn.style.backgroundColor = "transparent";
+      closeBtn.style.color = "var(--color-text-muted, #6e7681)";
+    });
     return header;
   }
 
@@ -85,7 +102,8 @@ export class ConceptLegend {
 
   createConceptSection(section) {
     const wrapper = document.createElement("div");
-    wrapper.style.marginBottom = "24px";
+
+    wrapper.style.marginBottom = "var(--space-lg, 16px)";
 
     // Group items by strength
     const strengths = section.items.filter((i) => i.strength === "strength");
@@ -95,12 +113,12 @@ export class ConceptLegend {
     );
 
     wrapper.innerHTML = `
-      <h4 style="margin: 0 0 12px 0; font-size: 16px; color: #333; text-transform: capitalize;">
+      <h4 style="margin: 0 0 var(--space-sm, 8px) 0; font-size: var(--font-size-xs, 11px); color: var(--color-text-muted, #6e7681); text-transform: uppercase; letter-spacing: 0.5px;">
         ${section.name.replace(/([A-Z])/g, " $1").trim()}
       </h4>
-      ${this.renderItemGroup("✅ Strengths", strengths, "#4CAF50")}
-      ${this.renderItemGroup("⚠️ Weaknesses", weaknesses, "#f44336")}
-      ${this.renderItemGroup("ℹ️ Other", others, "#FFC107")}
+      ${this.renderItemGroup("✅ Strengths", strengths, "var(--color-success, #6a9955)")}
+      ${this.renderItemGroup("⚠️ Weaknesses", weaknesses, "var(--color-error, #f48771)")}
+      ${this.renderItemGroup("ℹ️ Other", others, "var(--color-warning, #dcdcaa)")}
     `;
 
     return wrapper;
@@ -110,14 +128,14 @@ export class ConceptLegend {
     if (!items.length) return "";
 
     return `
-      <div style="margin-bottom: 12px;">
-        <div style="font-size: 13px; font-weight: 600; color: ${color}; margin-bottom: 6px;">${title}</div>
+      <div style="margin-bottom: var(--space-sm, 8px);">
+        <div style="font-size: var(--font-size-xs, 11px); font-weight: 600; color: ${color}; margin-bottom: var(--space-xs, 4px);">${title}</div>
         ${items
           .map(
             (item) => `
-          <div style="display: flex; align-items: center; gap: 8px; padding: 6px; background: #f8f9fa; border-radius: 6px; margin-bottom: 4px;">
-            <div style="width: 16px; height: 16px; background: ${item.color}; border-radius: 3px;"></div>
-            <span style="font-size: 13px; color: #333;">${item.label}</span>
+          <div style="display: flex; align-items: center; gap: var(--space-sm, 8px); padding: var(--space-xs, 4px); background: var(--color-bg-tertiary, #2d2d30); border-radius: var(--border-radius-sm, 2px); margin-bottom: 2px;">
+            <div style="width: 16px; height: 16px; background: ${item.color}; border-radius: 3px; border: 1px solid var(--color-border, #3e3e42);"></div>
+            <span style="font-size: var(--font-size-xs, 11px); color: var(--color-text-primary, #cccccc);">${item.label}</span>
           </div>
         `,
           )
@@ -127,18 +145,27 @@ export class ConceptLegend {
   }
 
   toggle() {
-    if (this.legendElement.style.display === "none") {
-      this.show();
+    this.isVisible = !this.isVisible;
+    if (this.legendElement) {
+      this.legendElement.style.display = this.isVisible ? "block" : "none";
     } else {
-      this.hide();
+      this.render(); // Render if not yet rendered
     }
   }
 
   show() {
-    this.legendElement.style.display = "block";
+    this.isVisible = true;
+    if (this.legendElement) {
+      this.legendElement.style.display = "block";
+    } else {
+      this.render();
+    }
   }
 
   hide() {
-    this.legendElement.style.display = "none";
+    this.isVisible = false;
+    if (this.legendElement) {
+      this.legendElement.style.display = "none";
+    }
   }
 }
