@@ -25,19 +25,19 @@ export class PawnStructureVisualizer {
         black: "rgba(200, 150, 0, 0.5)",
       },
       PASSED: {
-        white: "rgba(50, 200, 50, 0.5)", // Bright green
+        white: "rgba(50, 200, 50, 0.5)",
         black: "rgba(30, 150, 30, 0.5)",
       },
       BACKWARD: {
-        white: "rgba(255, 100, 0, 0.5)", // Orange
+        white: "rgba(255, 100, 0, 0.5)",
         black: "rgba(200, 80, 0, 0.5)",
       },
       CHAIN_LINK: {
-        white: "rgba(100, 100, 255, 0.6)", // Blue
+        white: "rgba(100, 100, 255, 0.6)",
         black: "rgba(70, 70, 200, 0.6)",
       },
       CHAIN_BASE: {
-        white: "rgba(150, 0, 150, 0.5)", // Purple
+        white: "rgba(150, 0, 150, 0.5)",
         black: "rgba(120, 0, 120, 0.5)",
       },
     };
@@ -48,7 +48,7 @@ export class PawnStructureVisualizer {
       PASSED: 3,
       BACKWARD: 2,
       CHAIN_LINK: 2,
-      CHAIN_BASE: 3, // Base is higher priority
+      CHAIN_BASE: 3,
     };
 
     this.labels = {
@@ -110,12 +110,10 @@ export class PawnStructureVisualizer {
     highlights.push(...this.colorToHighlights(analysis.white, "white"));
     // highlights.push(...this.colorToHighlights(analysis.black, "black"));
 
-    console.log("Generated highlights:", highlights);
     return highlights;
   }
 
   getEducationalContent(highlight) {
-    // console.log("Getting educational content for highlight:", highlight);
     const type = highlight.metadata?.type;
 
     if (!type || !this.descriptions[type]) return null;

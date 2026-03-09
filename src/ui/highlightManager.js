@@ -26,7 +26,6 @@ export class HighlightManager {
   }
 
   applyConcept(name) {
-    // console.log(`Applying concept: ${name}`);
     const highlights = this.engine.getConceptHighlights(name);
 
     if (!Array.isArray(highlights)) {

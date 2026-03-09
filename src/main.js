@@ -50,15 +50,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   panels.controlsPanel.initialize(appState);
 
   // In your DOMContentLoaded event, after panel initialization:
-  const topInsightBar = new TopInsightBar(
-    document.querySelector(".app-main"),
-    appState,
-  );
+  appState.topInsightBar = new TopInsightBar(panels.topBarContainer, appState);
+
   // Insert it at the top of app-main
   const appMain = document.querySelector(".app-main");
-  appMain.insertBefore(topInsightBar.element, appMain.firstChild);
-
-  appState.topInsightBar = topInsightBar;
+  appMain.insertBefore(appState.topInsightBar.element, appMain.firstChild);
 
   // Set up interactions
   setupBoardInteractions(appState);

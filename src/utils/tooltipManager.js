@@ -8,13 +8,11 @@ export class TooltipManager {
     this.isPinned = false;
     this.conceptVisualizers = new Map();
 
-    // Bind all methods
-    // Bind methods
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleBoardClick = this.handleBoardClick.bind(this);
     this.unpinHighlight = this.unpinHighlight.bind(this);
     this.handleUnpinClick = this.handleUnpinClick.bind(this);
-    // Add board click listener
+
     this.boardElement.addEventListener("click", this.handleBoardClick);
     document.addEventListener("click", this.handleDocumentClick);
   }
@@ -83,7 +81,6 @@ export class TooltipManager {
 
   show(highlight, event, isPinned = true) {
     if (this.isPinned && !isPinned) return;
-    console.log("Showing tooltip for highlight:", highlight);
 
     if (!highlight.description) {
       return;
@@ -122,7 +119,6 @@ export class TooltipManager {
     let content = this.buildEnhancedContent(highlight, descObj);
 
     if (isPinned) {
-      console.log("Pinning highlight:", highlight);
       content = this.addPinButton(content);
       this.tooltip.style.pointerEvents = "auto";
       this.tooltip.classList.add("pinned");
@@ -175,7 +171,6 @@ export class TooltipManager {
   }
 
   buildEnhancedContent(highlight, descObj) {
-    console.log("Building enhanced content for highlight:", highlight, descObj);
     const metadata = highlight.metadata || {};
     const type = metadata.type || "";
 

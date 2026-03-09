@@ -20,7 +20,6 @@ body {
     height: 100vh;
 }
 
-/* Main 3-column layout */
 .app-main {
     display: flex;
     flex-direction: column;

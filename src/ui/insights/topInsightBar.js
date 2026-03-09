@@ -10,15 +10,16 @@ export class TopInsightBar {
 
     this.element = this.create();
     this.container.appendChild(this.element);
-    this.hide(); // Start hidden
     this.attachEvents();
   }
 
   create() {
+    console.log("Creating TopInsightBar element");
     const bar = document.createElement("div");
     bar.id = "top-insight-bar";
     bar.style.cssText = `
       display: none;
+      width: 100%;
       background: var(--color-bg-tertiary, #2d2d30);
       border-bottom: 1px solid var(--color-border, #3e3e42);
       padding: 12px 20px;
@@ -159,18 +160,26 @@ export class TopInsightBar {
   }
 
   show(insights) {
-    if (!insights || insights.length === 0) return;
+    console.log("🎯 TopInsightBar.show called with", insights);
+
+    if (!insights || insights.length === 0) {
+      return;
+    }
 
     this.insightsList = insights;
     this.currentIndex = 0;
     this.currentInsight = insights[0];
     this.isVisible = true;
 
-    this.updateContent();
     this.element.style.display = "flex";
 
-    // Auto-show on board
-    this.showOnBoard();
+    this.updateContent();
+  }
+
+  // Also update hide method:
+  hide() {
+    this.isVisible = false;
+    this.element.style.display = "none"; // Make sure this sets to none
   }
 
   updateContent() {
@@ -182,29 +191,23 @@ export class TopInsightBar {
     const owner = metadata.owner || "";
     const square = insight.squares?.[0] || "";
 
-    // Update icon
     const iconEl = this.element.querySelector(".insight-icon");
     iconEl.innerHTML = this.getIcon(insight);
     iconEl.style.background = this.getColor(metadata.type);
 
-    // Update counter
     this.element.querySelector(".insight-counter").textContent =
       `${this.currentIndex + 1}/${this.insightsList.length}`;
 
-    // Update title
     const title = `${type.replace(/([A-Z])/g, " $1").trim()}${square ? ` · ${square}` : ""}${owner ? ` · ${owner}` : ""}`;
 
-    // Update description
     const description =
       insight.description?.description ||
       metadata.explanation?.beginner ||
       `${type} detected. Click Learn to understand more.`;
 
-    // Find or create title/description elements
     let titleEl = this.element.querySelector(".insight-title");
     let descEl = this.element.querySelector(".insight-description");
 
-    // If the structure changed, update carefully
     if (titleEl) {
       titleEl.innerHTML = `TOP INSIGHT · <span class="insight-counter">${this.currentIndex + 1}/${this.insightsList.length}</span>`;
     }
@@ -240,13 +243,10 @@ export class TopInsightBar {
     if (!this.currentInsight || !this.appState.highlightManager) return;
 
     // Clear existing
-    this.appState.highlightManager.clearHighlights();
+    // this.appState.highlightManager.clearHighlights();
 
     // Highlight this concept
-    this.appState.highlightManager.highlightConcept(
-      this.currentInsight.concept,
-      this.currentInsight,
-    );
+    this.appState.highlightManager.applyConcept(this.currentInsight.concept);
 
     // If passed pawn, show path
     if (this.currentInsight.metadata?.type === "PASSED") {
@@ -322,23 +322,6 @@ export class TopInsightBar {
         btn.style.background = "transparent";
         btn.style.color = "var(--color-text-primary)";
       }, 200);
-    }
-  }
-
-  hide() {
-    this.isVisible = false;
-    this.element.style.display = "none";
-
-    // Clear highlights
-    if (this.appState.highlightManager) {
-      // this.appState.highlightManager.clearHighlights();
-    }
-  }
-
-  show() {
-    if (this.insightsList.length > 0) {
-      this.isVisible = true;
-      this.element.style.display = "flex";
     }
   }
 }

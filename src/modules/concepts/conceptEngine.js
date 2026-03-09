@@ -6,7 +6,6 @@ export class ConceptEngine {
   }
 
   register(name, concept) {
-    console.log(`Registering concept: ${name}`, { concept });
     this.concepts.set(name, concept);
   }
 
@@ -17,14 +16,11 @@ export class ConceptEngine {
 
     // Get analysis from concept
     const analysis = concept.analyze(this.game);
-    console.log(`Analysis for concept ${name}:`, analysis);
 
     // Get visualizer from concept and convert to highlights
     const visualizer = concept.getVisualizer();
 
-    console.log(`Visualizer for concept ${name}:`, visualizer);
     if (!visualizer || !visualizer.toHighlights) {
-      console.warn(`Concept ${name} has no visualizer or toHighlights method`);
       return [];
     }
     if (!visualizer) return [];
