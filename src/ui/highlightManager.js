@@ -26,7 +26,6 @@ export class HighlightManager {
   }
 
   applyConcept(name) {
-    // console.log(`Applying concept: ${name}`);
     const highlights = this.engine.getConceptHighlights(name);
 
     if (!Array.isArray(highlights)) {
@@ -39,8 +38,6 @@ export class HighlightManager {
 
     this.lastHighlights = [...this.lastHighlights, ...highlights];
 
-    // console.log("this.lastHighlights:", this.lastHighlights);
-
     this.renderer.renderMany(highlights);
 
     if (this.tooltipManager) {
@@ -49,11 +46,9 @@ export class HighlightManager {
   }
 
   removeConcept(name) {
-    // Clear all and re-render remaining concepts
     this.renderer.clear();
     this.lastHighlights = [];
 
-    // Re-render all active concepts except the one being removed
     this.activeConcepts.forEach((conceptName) => {
       if (conceptName !== name) {
         const highlights = this.engine.getConceptHighlights(conceptName);
@@ -116,7 +111,6 @@ export class HighlightManager {
   }
 
   handleMouseLeave() {
-    // console.log("Mouse left highlight element");
     if (this.tooltipManager) {
       this.tooltipManager.hide();
     }

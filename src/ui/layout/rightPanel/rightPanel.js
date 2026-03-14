@@ -39,7 +39,7 @@ export class RightPanel {
                     </button>
                 </div>
                 
-                <div id="ai-coach-container"></div>
+                 <div id="insight-list-container"></div>
                 <div id="concept-details-container"></div>
             </div>
         `;
@@ -84,7 +84,7 @@ export class RightPanel {
 
   async analyzePosition() {
     // Clear previous highlights
-    this.highlightManager.clearHighlights();
+    // this.highlightManager.clearHighlights();
 
     // Show thinking state in AI coach
     await this.aiCoach.analyzePosition(this.engine, this.game);

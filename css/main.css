@@ -10,3 +10,7 @@
 /* @import 'components/aiCoach/coach.css'; */
 @import 'components/board/board.css';
 @import 'components/board/overlay.css';
+@import 'components/board/tooltip.css';
+@import 'components/board/highlights.css';
+
+@import 'components/insights/insight.css'

@@ -82,7 +82,9 @@ export class ControlPanel {
           console.log("Flip Board clicked");
           break;
         case "analyze":
-          console.log("Analyze clicked");
+          if (this.appState.callbacks?.onAnalyze) {
+            this.appState.callbacks.onAnalyze();
+          }
           break;
         default:
           console.warn("Unknown action:", action);

@@ -20,12 +20,22 @@ body {
     height: 100vh;
 }
 
-/* Main 3-column layout */
 .app-main {
     display: flex;
-    flex: 1 1 0;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--color-bg-primary);
+}
+
+#top-bar-container {
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+.middle-section {
+    display: flex;
+    flex: 1;
     min-height: 0;
-    height: 1px;
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -83,6 +93,10 @@ body {
     overflow: hidden;
     flex-shrink: 0;
     height: 100%;
+}
+
+.controls-panel {
+    flex-shrink: 0;
 }
 
 /* Scrollbar styling */

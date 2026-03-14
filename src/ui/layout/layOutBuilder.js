@@ -10,23 +10,41 @@ export class LayoutBuilder {
   build() {
     this.app.innerHTML = "";
 
+    const topBarContainer = document.createElement("div");
+    topBarContainer.id = "top-bar-container";
+    topBarContainer.style.width = "100%";
+    topBarContainer.style.flexShrink = "0";
+
     const mainContent = document.createElement("div");
     mainContent.className = "app-main";
+    mainContent.style.flexDirection = "column";
+    mainContent.style.height = "100%";
+
+    const middleSection = document.createElement("div");
+    middleSection.style.display = "flex";
+    middleSection.style.flex = "1";
+    middleSection.style.minHeight = "0";
+    middleSection.style.borderBottom = "1px solid var(--color-border)";
 
     const leftPanel = new LeftPanel(document.createElement("div")).element;
     const boardContainer = this.createBoardContainer();
     const rightPanel = new RightPanel(document.createElement("div")).element;
+
+    middleSection.appendChild(leftPanel);
+    middleSection.appendChild(boardContainer);
+    middleSection.appendChild(rightPanel);
+
     const controlsPanel = new ControlPanel(document.createElement("div"))
       .element;
 
-    mainContent.appendChild(leftPanel);
-    mainContent.appendChild(boardContainer);
-    mainContent.appendChild(rightPanel);
+    mainContent.appendChild(topBarContainer);
+    mainContent.appendChild(middleSection);
+    mainContent.appendChild(controlsPanel);
 
     this.app.appendChild(mainContent);
-    this.app.appendChild(controlsPanel);
 
     return {
+      topBarContainer,
       leftPanel,
       boardContainer,
       rightPanel,
