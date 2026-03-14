@@ -2,7 +2,7 @@ import { BoardCoordinates } from "../../../utils/boardCoordinates.js.js";
 import {
   createArrowHighlight,
   createSquareHighlight,
-} from "../../../utils/highlightTypes.js";
+} from "../../../ui/highlights/highlightTypes.js";
 
 const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
@@ -110,9 +110,81 @@ export class PawnStructureVisualizer {
     highlights.push(...this.colorToHighlights(analysis.white, "white"));
     // highlights.push(...this.colorToHighlights(analysis.black, "black"));
 
+    highlights.push(...this.getPassedPawnPaths(analysis.white, "white"));
+
     return highlights;
   }
 
+  getPassedPawnPaths(colorAnalysis, color) {
+    const pathHighlights = [];
+
+    colorAnalysis.findings.forEach((finding) => {
+      if (finding.type === "PASSED") {
+        const startSquare = toSquare(
+          finding.position.row,
+          finding.position.col,
+        );
+        const pathSquares = this.calculatePromotionPath(startSquare, color);
+
+        // Create a parent ID for this passed pawn
+        const parentId = `passed-${startSquare}`;
+
+        pathSquares.forEach((square, idx) => {
+          pathHighlights.push(
+            createSquareHighlight({
+              concept: "pawnStructure",
+              squares: [square],
+              color: this.colors.PASSED[color],
+              label: "Promotion Path",
+              priority: 2,
+              metadata: {
+                type: "PASSED_PATH",
+                step: idx + 1,
+                totalSteps: pathSquares.length,
+                isPromotion: idx === pathSquares.length - 1,
+                sourceSquare: startSquare,
+                owner: color,
+                parentConcept: "PASSED",
+                parentId: parentId,
+                isVisualEnhancement: true,
+                ...finding.metadata,
+              },
+              description: {
+                strength: "strength",
+                description:
+                  idx === pathSquares.length - 1
+                    ? "The promotion square! This passed pawn can become a queen here."
+                    : `Step ${idx + 1} of ${pathSquares.length} toward promotion.`,
+                advice:
+                  idx === pathSquares.length - 1
+                    ? "Push to promote! Calculate if the king can stop it."
+                    : "Keep pushing forward - each step reduces the enemy's time to stop it.",
+              },
+            }),
+          );
+        });
+      }
+    });
+
+    return pathHighlights;
+  }
+
+  // Helper method to calculate promotion path
+  calculatePromotionPath(startSquare, owner) {
+    const file = startSquare[0];
+    const startRank = parseInt(startSquare[1]);
+    const direction = owner === "white" ? 1 : -1;
+
+    const pathSquares = [];
+    const maxSteps = owner === "white" ? 8 - startRank : startRank - 1;
+
+    for (let i = 1; i <= maxSteps; i++) {
+      const rank = startRank + i * direction;
+      pathSquares.push(`${file}${rank}`);
+    }
+
+    return pathSquares;
+  }
   getEducationalContent(highlight) {
     const type = highlight.metadata?.type;
 

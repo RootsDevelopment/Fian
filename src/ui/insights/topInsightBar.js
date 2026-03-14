@@ -5,6 +5,7 @@ export class TopInsightBar {
     this.appState = appState;
     this.currentInsight = null;
     this.insightsList = [];
+    this.allInsights = [];
     this.currentIndex = 0;
     this.isVisible = false;
 
@@ -166,6 +167,11 @@ export class TopInsightBar {
       return;
     }
 
+    this.allInsights = insights;
+    this.insightsList = (insights || []).filter(
+      (insight) => !insight.metadata?.isVisualEnhancement,
+    );
+
     this.insightsList = insights;
     this.currentIndex = 0;
     this.currentInsight = insights[0];
@@ -176,7 +182,6 @@ export class TopInsightBar {
     this.updateContent();
   }
 
-  // Also update hide method:
   hide() {
     this.isVisible = false;
     this.element.style.display = "none"; // Make sure this sets to none
@@ -242,39 +247,9 @@ export class TopInsightBar {
   showOnBoard() {
     if (!this.currentInsight || !this.appState.highlightManager) return;
 
-    // Clear existing
-    // this.appState.highlightManager.clearHighlights();
+    this.appState.highlightManager.renderer.clear();
 
-    // Highlight this concept
     this.appState.highlightManager.applyConcept(this.currentInsight.concept);
-
-    // If passed pawn, show path
-    if (this.currentInsight.metadata?.type === "PASSED") {
-      this.showPawnPath();
-    }
-  }
-
-  showPawnPath() {
-    const insight = this.currentInsight;
-    const square = insight.squares[0];
-    const file = square[0];
-    const startRank = parseInt(square[1]);
-    const owner = insight.metadata?.owner || "white";
-    const direction = owner === "white" ? 1 : -1;
-
-    // Create path squares
-    const pathSquares = [];
-    for (
-      let i = 1;
-      i <= (owner === "white" ? 8 - startRank : startRank - 1);
-      i++
-    ) {
-      const rank = startRank + i * direction;
-      pathSquares.push(`${file}${rank}`);
-    }
-
-    // You'll implement actual path rendering in BoardHighlights
-    console.log("Path to promotion:", pathSquares);
   }
 
   learnMore() {

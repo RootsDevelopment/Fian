@@ -1,8 +1,8 @@
-import { HighlightRenderer } from "../ui/highlightRenderer.js";
+import { HighlightRenderer } from "../ui/highlights/highlightRenderer.js";
 import { ConceptEngine } from "../modules/concepts/conceptEngine.js";
 import { pawnStructure } from "../modules/concepts/pawnStructure/index.js";
 import { HighlightManager } from "../ui/highlightManager.js";
-import { ArrowRenderer } from "../ui/arrowRenderer.js";
+import { ArrowRenderer } from "../ui/highlights/arrowRenderer.js";
 import { ShortcutManager } from "../utils/shortcutManager.js";
 import { TooltipManager } from "../utils/tooltipManager.js";
 import { ConceptLegend } from "../ui/conceptLegend.js";

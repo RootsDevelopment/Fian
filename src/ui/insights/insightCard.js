@@ -1,4 +1,3 @@
-// ui/insights/InsightCard.js
 export class InsightCard {
   constructor(appState) {
     this.appState = appState;

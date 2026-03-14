@@ -6,6 +6,7 @@ export const analyzeHandler = {
     console.log("🔍 Analyzing position...");
 
     const concepts = appState.engine.getConceptHighlights("pawnStructure");
+    console.log("Concepts found:", concepts);
 
     appState.currentInsights = concepts;
 

@@ -21,7 +21,7 @@ export class InsightList {
             font-size: var(--font-size-xs);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-          ">INSIGHTS <span class="insight-count">(0)</span></div>
+          ">INSIGHTS <span class="insight-count">${this.insights.length}</span></div>
           <button class="refresh-insights" style="
             background: transparent;
             border: none;
@@ -250,6 +250,9 @@ export class InsightList {
 
   updateInsights(insights) {
     this.insights = insights || [];
+    // .filter(
+    //   (insight) => !insight.metadata?.isVisualEnhancement,
+    // );
     this.render();
   }
 

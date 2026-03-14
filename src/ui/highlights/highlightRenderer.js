@@ -1,4 +1,4 @@
-import { HighlightType } from "../utils/highlightTypes.js";
+import { HighlightType } from "./highlightTypes.js";
 
 export class HighlightRenderer {
   constructor(arrowRenderer) {
