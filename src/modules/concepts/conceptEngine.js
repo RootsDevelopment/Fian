@@ -11,7 +11,6 @@ export class ConceptEngine {
 
   getConceptHighlights(name) {
     const concept = this.concepts.get(name);
-    // console.log(`Getting highlights for concept: ${name}`, { concept });
     if (!concept) return [];
 
     // Get analysis from concept

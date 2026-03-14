@@ -23,8 +23,6 @@ export class HighlightRenderer {
   }
 
   renderMany(highlights) {
-    // console.log("renderMany called with", highlights, "highlights");
-
     this.clear();
 
     if (!this.boardElement) {
