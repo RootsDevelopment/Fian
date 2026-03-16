@@ -33,9 +33,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initialize game with default position
   initializeGame(appState, "6k1/5ppp/8/8/P7/5PP1/6K1/8");
 
-  // Initialize chess systems (highlights, engine, etc.)
-  await initializeChessSystems(appState);
-
   // Initialize all panels
   panels.leftPanel.initialize(appState);
   panels.rightPanel.initialize(appState);

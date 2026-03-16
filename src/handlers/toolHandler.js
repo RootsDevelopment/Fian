@@ -34,10 +34,10 @@ export const toolHandler = {
     switch (toolId) {
       case "pawn-structure":
         // Re-initialize pawn structure view
-        if (appState.pawnStructureView) {
-          const analysis = appState.engine?.analyzeConcept("pawnStructure");
-          if (analysis) appState.pawnStructureView.update(analysis);
-        }
+        // if (appState.pawnStructureView) {
+        //   const analysis = appState.engine?.analyzeConcept("pawnStructure");
+        //   if (analysis) appState.pawnStructureView.update(analysis);
+        // }
         break;
 
       case "position-analysis":

@@ -15,7 +15,6 @@ export class TopInsightBar {
   }
 
   create() {
-    console.log("Creating TopInsightBar element");
     const bar = document.createElement("div");
     bar.id = "top-insight-bar";
     bar.style.cssText = `

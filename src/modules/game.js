@@ -3,16 +3,19 @@ import Board from "./board.js";
 
 export default class Game {
   constructor(fenArray) {
-    const [placement, activeColor, castling, enPassant, halfMove, fullMove] =
-      fenArray;
+    this.placement = fenArray[0];
+    this.activeColor = fenArray[1];
+    this.castling = fenArray[2];
+    this.enPassant = fenArray[3];
+    this.halfMove = fenArray[4];
+    this.fullMove = fenArray[5];
 
-    this.board = new Board(placement);
-
-    this.turn = activeColor === "w" ? "white" : "black";
-    this.castlingRights = castling;
-    this.enPassantTarget = enPassant !== "-" ? enPassant : null;
-    this.halfMoveClock = parseInt(halfMove);
-    this.fullMoveNumber = parseInt(fullMove);
+    this.board = new Board(this.placement);
+    this.turn = this.activeColor === "w" ? "white" : "black";
+    this.castlingRights = this.castling;
+    this.enPassantTarget = this.enPassant !== "-" ? this.enPassant : null;
+    this.halfMoveClock = parseInt(this.halfMove);
+    this.fullMoveNumber = parseInt(this.fullMove);
 
     this.history = [];
     this.status = "active";

@@ -1,9 +1,13 @@
 import { initializeGame, updateStatusBar } from "../core/gameController.js";
-import { clearHighlights } from "../core/chessSystems.js";
+import {
+  clearHighlights,
+  initializeChessSystems,
+} from "../core/chessSystems.js";
 
 export const fenHandler = {
   load(appState, fen) {
     try {
+      console.log("Loading FEN:", fen);
       const cleanFEN = fen.trim();
       const fenParts = cleanFEN.split(" ");
 

@@ -50,7 +50,7 @@ export async function initializeChessSystems(appState) {
 
 export function clearHighlights(appState) {
   if (appState.highlightManager) {
-    // appState.highlightManager.clearHighlights();
+    appState.highlightManager.renderer.clear();
   }
 }
 

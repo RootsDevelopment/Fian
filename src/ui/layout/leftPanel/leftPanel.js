@@ -164,6 +164,7 @@ export class LeftPanel {
 
     // FEN Apply button
     this.element.querySelector("#fen-apply").addEventListener("click", () => {
+      console.log("Applying FEN from input");
       const fen = this.element.querySelector("#fen-input").value;
       if (this.appState.callbacks?.onLoadFEN) {
         this.appState.callbacks.onLoadFEN(fen);

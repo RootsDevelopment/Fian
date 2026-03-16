@@ -3,8 +3,6 @@ export const analyzeHandler = {
   analyze(appState) {
     if (!appState.engine || !appState.game) return [];
 
-    console.log("🔍 Analyzing position...");
-
     const concepts = appState.engine.getConceptHighlights("pawnStructure");
     console.log("Concepts found:", concepts);
 

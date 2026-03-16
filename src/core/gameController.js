@@ -1,7 +1,8 @@
 import renderBoard from "../ui/render.js";
 import Game from "../modules/game.js";
+import { initializeChessSystems } from "./chessSystems.js";
 
-export function initializeGame(appState, fenString) {
+export async function initializeGame(appState, fenString) {
   const fenParts = fenString.split(" ");
   const defaultParts = ["w", "KQkq", "-", "0", "1"];
 
@@ -15,9 +16,8 @@ export function initializeGame(appState, fenString) {
   ];
 
   appState.game = new Game(fullFenParts);
-  renderBoard(appState.game.board);
 
-  return appState.game;
+  await initializeChessSystems(appState);
 }
 
 export async function makeMove(appState, fromSquare, toSquare) {
